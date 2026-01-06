@@ -48,6 +48,7 @@ public class ConsoleUI {
                         ConsoleUIColor.RED + "Respuesta incorrecta" + ConsoleUIColor.RESET);
             }
         }
+        exam.calculateScore();
         displayResults(exam);
     }
 
@@ -96,7 +97,7 @@ public class ConsoleUI {
         System.out.println("Correctas: " + exam.getCorrect());
         System.out.println("Incorrectas: " + exam.getIncorrect());
         System.out.println("Sin contestar: " + exam.getUnanswered());
-        System.out.println("Total: " + (exam.getCorrect() - exam.getIncorrect()));
+        System.out.printf("Puntuación: %.2f", exam.getScore());
     }
 
 }

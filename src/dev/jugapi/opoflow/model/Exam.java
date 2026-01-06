@@ -7,7 +7,7 @@ public class Exam {
     private String title;
     private List<Question> questions;
     private int currentQuestionIndex;
-    private float score;
+    private double score;
     private OppositionTopic topic;
     /*
     TODO: Correct and incorrect: because each competitive exam is graded differently, so that in the future a method
@@ -36,11 +36,11 @@ public class Exam {
         return questions;
     }
 
-    public float getScore() {
+    public double getScore() {
         return score;
     }
 
-    public void setScore(float score) {
+    public void setScore(double score) {
         this.score = score;
     }
 
@@ -81,5 +81,11 @@ public class Exam {
 
     public void registerUnanswered() {
         unanswered++;
+    }
+
+    public void calculateScore(){
+        double hits = correct * topic.getOpposition().getHit();
+        double errors = incorrect * topic.getOpposition().getError();
+        setScore(hits - errors);
     }
 }
