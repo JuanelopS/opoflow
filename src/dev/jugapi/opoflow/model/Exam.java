@@ -16,6 +16,7 @@ public class Exam {
     */
     private int correct;
     private int incorrect;
+    private int unanswered;
 
     public Exam(String title, List<Question> questions, OppositionTopic topic) {
         this.title = title;
@@ -55,22 +56,30 @@ public class Exam {
         return incorrect;
     }
 
-    public Question getNextQuestion(){
-        if(!hasMoreQuestions()){
+    public int getUnanswered() {
+        return unanswered;
+    }
+
+    public Question getNextQuestion() {
+        if (!hasMoreQuestions()) {
             return null;
         }
         return questions.get(currentQuestionIndex++);
     }
 
-    public boolean hasMoreQuestions(){
+    public boolean hasMoreQuestions() {
         return currentQuestionIndex < questions.size();
     }
 
-    public void registerAnswer(boolean isCorrect){
-        if(isCorrect){
+    public void registerAnswer(boolean isCorrect) {
+        if (isCorrect) {
             correct++;
         } else {
             incorrect++;
         }
+    }
+
+    public void registerUnanswered() {
+        unanswered++;
     }
 }

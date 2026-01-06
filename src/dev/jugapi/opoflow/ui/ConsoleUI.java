@@ -6,7 +6,6 @@ import dev.jugapi.opoflow.model.Option;
 import dev.jugapi.opoflow.model.Question;
 import dev.jugapi.opoflow.service.QuestionService;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleUI {
@@ -25,16 +24,29 @@ public class ConsoleUI {
         Exam exam = service.createNewExam(topic);
 
         for (Question q : exam.getQuestions()) {
+
             displayQuestion(q);
             System.out.print("Respuesta: ");
-            int response = translateResponse();
-            if (response == -1) {   // -1 because getResponse / indexOf return
-                System.out.println("Respuesta no válida.");
+            int response;
+            do{
+                response = translateResponse();
+                if (response == -1) {   // -1 because translateResponse / indexOf return
+                    System.out.println("Respuesta no válida. Por favor introduce un valor valido: ");
+                }
+            } while(response == -1);
+
+            if (response == -2) {
+                System.out.println("Respuesta en blanco");
                 continue;
             }
-            boolean isCorrect = service.checkAnswer(q, response);
-            exam.registerAnswer(isCorrect);
-            System.out.println(isCorrect ? "Respuesta correcta" : "Respuesta incorrecta");
+
+            if(response == -2){
+                exam.registerUnanswered();
+            } else {
+                boolean isCorrect = service.checkAnswer(q, response);
+                exam.registerAnswer(isCorrect);
+                System.out.println(isCorrect ? "Respuesta correcta" : "Respuesta incorrecta");
+            }
         }
         displayResults(exam);
     }
@@ -52,7 +64,7 @@ public class ConsoleUI {
         int response;
         do {
             System.out.print("Opción: ");
-            response = kb.nextInt();
+            response = Integer.parseInt(kb.nextLine());
         } while ((response < 1) || (response > topics.length));
 
         return topics[response - 1];
@@ -68,14 +80,19 @@ public class ConsoleUI {
     }
 
     private int translateResponse() {
-        String validLetters = "abcdef";  //TODO: regex¿?
-        String letter = kb.next().toLowerCase();
-        return validLetters.indexOf(letter);
+        String letter = kb.nextLine().toLowerCase().trim();
+        if (letter.isEmpty()) {
+            return -2;
+        } else {
+            String validLetters = "abcdef";  //TODO: regex¿?
+            return validLetters.indexOf(letter);
+        }
     }
 
     private void displayResults(Exam exam) {
         System.out.println("Correctas: " + exam.getCorrect());
         System.out.println("Incorrectas: " + exam.getIncorrect());
+        System.out.println("Sin contestar: " + exam.getUnanswered());
         System.out.println("Total: " + (exam.getCorrect() - exam.getIncorrect()));
     }
 
