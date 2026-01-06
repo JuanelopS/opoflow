@@ -27,14 +27,14 @@ public class ConsoleUI {
             displayQuestion(q);
             System.out.print("Respuesta: ");
             int response;
-            do{
+            do {
                 response = translateResponse(q.getOptions().size());
                 if (response == -1) {   // -1 because translateResponse / indexOf return
                     System.out.print(ConsoleUIColor.RED +
                             "Respuesta no válida. Por favor introduce un valor valido: " +
                             ConsoleUIColor.RESET);
                 }
-            } while(response == -1);
+            } while (response == -1);
 
             if (response == -2) {
                 System.out.println(ConsoleUIColor.BLUE + "Respuesta en blanco" + ConsoleUIColor.RESET);
@@ -48,10 +48,10 @@ public class ConsoleUI {
                         ConsoleUIColor.RED + "Respuesta incorrecta" + ConsoleUIColor.RESET);
             }
         }
-        exam.calculateFinalScore();
         displayResults(exam);
     }
 
+    // TODO: handle exams that do not yet have questions
     private OppositionTopic selectTopic() {
         OppositionTopic[] topics = service.getAllTopics();
         System.out.println("\nSelecciona la oposición/bloque: ");
@@ -62,11 +62,21 @@ public class ConsoleUI {
             index++;
         }
 
-        int response;
+        int response = 0;
+        boolean isValid = false;
         do {
             System.out.print("Opción: ");
-            response = Integer.parseInt(kb.nextLine());
-        } while ((response < 1) || (response > topics.length));
+            try {
+                response = Integer.parseInt(kb.nextLine());
+                if(response < 1 || response > topics.length){
+                    throw new IllegalArgumentException();
+                }
+                isValid = true;
+            } catch (IllegalArgumentException e) {   // parseInt && outside a certain range (topics.length)
+                System.out.println(ConsoleUIColor.RED + "El valor introducido no es válido" + ConsoleUIColor.RESET);
+                response = 0;  // continue in loop
+            }
+        } while (!isValid);
 
         return topics[response - 1];
     }
@@ -94,6 +104,7 @@ public class ConsoleUI {
     }
 
     private void displayResults(Exam exam) {
+        exam.calculateFinalScore();
         System.out.println("Correctas: " + exam.getCorrect());
         System.out.println("Incorrectas: " + exam.getIncorrect());
         System.out.println("Sin contestar: " + exam.getUnanswered());
