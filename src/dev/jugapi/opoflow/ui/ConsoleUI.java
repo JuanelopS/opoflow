@@ -48,7 +48,7 @@ public class ConsoleUI {
                         ConsoleUIColor.RED + "Respuesta incorrecta" + ConsoleUIColor.RESET);
             }
         }
-        exam.calculateScore();
+        exam.calculateFinalScore();
         displayResults(exam);
     }
 

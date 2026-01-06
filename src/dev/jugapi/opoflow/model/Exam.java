@@ -83,7 +83,7 @@ public class Exam {
         unanswered++;
     }
 
-    public void calculateScore(){
+    public void calculateFinalScore(){
         double hits = correct * topic.getOpposition().getHit();
         double errors = incorrect * topic.getOpposition().getError();
         setScore(hits - errors);
