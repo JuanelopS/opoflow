@@ -37,11 +37,8 @@ public class ConsoleUI {
 
             if (response == -2) {
                 System.out.println("Respuesta en blanco");
-                continue;
-            }
-
-            if(response == -2){
                 exam.registerUnanswered();
+                continue;
             } else {
                 boolean isCorrect = service.checkAnswer(q, response);
                 exam.registerAnswer(isCorrect);
