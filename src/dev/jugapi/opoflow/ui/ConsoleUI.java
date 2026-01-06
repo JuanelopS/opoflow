@@ -30,18 +30,22 @@ public class ConsoleUI {
             do{
                 response = translateResponse(q.getOptions().size());
                 if (response == -1) {   // -1 because translateResponse / indexOf return
-                    System.err.print("Respuesta no válida. Por favor introduce un valor valido: ");
+                    System.out.print(ConsoleUIColor.RED +
+                            "Respuesta no válida. Por favor introduce un valor valido: " +
+                            ConsoleUIColor.RESET);
                 }
             } while(response == -1);
 
             if (response == -2) {
-                System.out.println("Respuesta en blanco");
+                System.out.println(ConsoleUIColor.BLUE + "Respuesta en blanco" + ConsoleUIColor.RESET);
                 exam.registerUnanswered();
                 continue;
             } else {
                 boolean isCorrect = service.checkAnswer(q, response);
                 exam.registerAnswer(isCorrect);
-                System.out.println(isCorrect ? "Respuesta correcta" : "Respuesta incorrecta");
+                System.out.println(isCorrect ?
+                        ConsoleUIColor.GREEN + "Respuesta correcta" + ConsoleUIColor.RESET :
+                        ConsoleUIColor.RED + "Respuesta incorrecta" + ConsoleUIColor.RESET);
             }
         }
         displayResults(exam);
