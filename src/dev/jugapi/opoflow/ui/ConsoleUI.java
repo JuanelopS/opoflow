@@ -24,14 +24,13 @@ public class ConsoleUI {
         Exam exam = service.createNewExam(topic);
 
         for (Question q : exam.getQuestions()) {
-
             displayQuestion(q);
             System.out.print("Respuesta: ");
             int response;
             do{
-                response = translateResponse();
+                response = translateResponse(q.getOptions().size());
                 if (response == -1) {   // -1 because translateResponse / indexOf return
-                    System.out.println("Respuesta no válida. Por favor introduce un valor valido: ");
+                    System.err.print("Respuesta no válida. Por favor introduce un valor valido: ");
                 }
             } while(response == -1);
 
@@ -76,13 +75,16 @@ public class ConsoleUI {
         }
     }
 
-    private int translateResponse() {
+    private int translateResponse(int options) {
         String letter = kb.nextLine().toLowerCase().trim();
         if (letter.isEmpty()) {
             return -2;
         } else {
-            String validLetters = "abcdef";  //TODO: regex¿?
-            return validLetters.indexOf(letter);
+            String validLetters = "abcdefghijklmnopqrstuvwxyz";  //TODO: regex¿?
+            int response = validLetters.indexOf(letter);
+            if (response == -1 || response >= options) {
+                return -1;
+            } else return response;
         }
     }
 
