@@ -27,7 +27,7 @@ public class ConsoleUI {
         for (Question q : exam.getQuestions()) {
             displayQuestion(q);
             System.out.print("Respuesta: ");
-            int response = getResponse();
+            int response = translateResponse();
             if (response == -1) {   // -1 because getResponse / indexOf return
                 System.out.println("Respuesta no válida.");
                 continue;
@@ -67,23 +67,10 @@ public class ConsoleUI {
         }
     }
 
-    private int getResponse() {
-        String validLetters = "abcdef";  //todo: regex¿?
+    private int translateResponse() {
+        String validLetters = "abcdef";  //TODO: regex¿?
         String letter = kb.next().toLowerCase();
         return validLetters.indexOf(letter);
-    }
-
-    // TODO: clean this -> too many things (validation, prints and returns result)
-    private boolean checkAnswer(Question question, int response) {
-        List<Option> options = question.getOptions();
-        if (response >= options.size() || response < 0) {
-            System.out.println("Respuesta no válida");
-            return false;
-        }
-        if (options.get(response).isCorrect()) {
-            System.out.println("Respuesta correcta!");
-        } else System.out.println("Respuesta incorrecta");
-        return options.get(response).isCorrect();
     }
 
     private void displayResults(Exam exam) {
