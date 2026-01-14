@@ -1,5 +1,7 @@
 package dev.jugapi.opoflow.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Question {
@@ -10,7 +12,7 @@ public class Question {
 
     public Question(String prompt, List<Option> options, OppositionTopic topic) {
         this.prompt = prompt;
-        this.options = options;
+        this.options = new ArrayList<>(options);  // this makes the list mutable so that the order of the responses can be randomized.
         this.topic = topic;
     }
 
@@ -26,4 +28,7 @@ public class Question {
         return topic;
     }
 
+    public void shuffleOptions() {
+        Collections.shuffle(this.options);
+    }
 }

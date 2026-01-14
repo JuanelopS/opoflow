@@ -24,6 +24,7 @@ public class ConsoleUI {
         Exam exam = service.createNewExam(topic);
 
         for (Question q : exam.getQuestions()) {
+            // TODO: add number to question prompt
             displayQuestion(q);
             System.out.print("Respuesta: ");
             int response;
@@ -110,5 +111,4 @@ public class ConsoleUI {
         System.out.println("Sin contestar: " + exam.getUnanswered());
         System.out.printf("Puntuación: %.2f", exam.getScore());
     }
-
 }

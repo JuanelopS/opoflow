@@ -6,7 +6,10 @@ import dev.jugapi.opoflow.model.Option;
 import dev.jugapi.opoflow.model.Question;
 import dev.jugapi.opoflow.repository.QuestionRepository;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class QuestionService {
 
@@ -25,7 +28,11 @@ public class QuestionService {
         List<Question> allQuestions = getExamQuestions();
         List<Question> filtered = allQuestions.stream()
                 .filter(q -> topic.includes(q.getTopic()))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
+        Collections.shuffle(filtered);
+        for(Question q : filtered){
+            q.shuffleOptions();
+        }
         return new Exam(topic.getDescription(), filtered, topic);
     }
 
