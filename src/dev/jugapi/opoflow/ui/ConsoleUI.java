@@ -12,8 +12,8 @@ import java.util.Scanner;
 
 public class ConsoleUI {
 
-    private QuestionService service;
-    private Scanner kb;
+    private final QuestionService service;
+    private final Scanner kb;
 
     public ConsoleUI(QuestionService service) {
         this.service = service;
@@ -27,6 +27,7 @@ public class ConsoleUI {
 
         for (Question q : exam.getQuestions()) {
             // TODO: add number to question prompt
+
             displayQuestion(q);
             System.out.print("Respuesta: ");
             int response;
@@ -43,7 +44,6 @@ public class ConsoleUI {
             if (response == -2) {
                 System.out.println(ConsoleUIColor.BLUE + "Respuesta en blanco" + ConsoleUIColor.RESET);
                 exam.registerUnanswered();
-                continue;
             } else {
                 boolean isCorrect = service.checkAnswer(q, response);
                 exam.registerAnswer(isCorrect);
@@ -73,7 +73,7 @@ public class ConsoleUI {
                     " (" + service.getQuestionCount(ot) + ")");
         }
 
-        int response = 0;
+        int response;
         boolean isValid = false;
         do
         {

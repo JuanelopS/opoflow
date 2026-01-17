@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class FileQuestionRepository implements QuestionRepository {
 
-    private String fileName;
+    private final String fileName;
 
     private static final int INDEX_TOPIC = 0;
     private static final int INDEX_PROMPT = 1;

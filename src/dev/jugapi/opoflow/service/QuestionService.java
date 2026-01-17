@@ -14,13 +14,15 @@ import java.util.stream.Collectors;
 public class QuestionService {
 
     private final QuestionRepository repository;
+    private final List<Question> allQuestions;
 
     public QuestionService(QuestionRepository repository) {
         this.repository = repository;
+        this.allQuestions = repository.retrieveQuestions();
     }
 
     public List<Question> getExamQuestions() {
-        return repository.retrieveQuestions();
+        return this.allQuestions;
     }
 
     /* This method create a new Exam for a UI filtering by topic (see enums in model package) */

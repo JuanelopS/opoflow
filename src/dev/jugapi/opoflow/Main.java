@@ -10,7 +10,7 @@ import dev.jugapi.opoflow.ui.ConsoleUI;
 public class Main {
     public static void main(String[] args) {
 
-        QuestionRepository repository = new FileQuestionRepository("questions2.txt");
+        QuestionRepository repository = new FileQuestionRepository("questions.txt");
         QuestionService service = new QuestionService(repository);
         ConsoleUI ui = new ConsoleUI(service);
         ui.start();
