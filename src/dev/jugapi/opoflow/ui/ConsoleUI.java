@@ -6,6 +6,8 @@ import dev.jugapi.opoflow.model.Option;
 import dev.jugapi.opoflow.model.Question;
 import dev.jugapi.opoflow.service.QuestionService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleUI {
@@ -28,9 +30,10 @@ public class ConsoleUI {
             displayQuestion(q);
             System.out.print("Respuesta: ");
             int response;
-            do {
+            do
+            {
                 response = translateResponse(q.getOptions().size());
-                if (response == -1) {   // -1 because translateResponse / indexOf return
+                if (response == -1) {
                     System.out.print(ConsoleUIColor.RED +
                             "Respuesta no válida. Por favor introduce un valor valido: " +
                             ConsoleUIColor.RESET);
@@ -55,31 +58,41 @@ public class ConsoleUI {
     // TODO: handle exams that do not yet have questions
     private OppositionTopic selectTopic() {
         OppositionTopic[] topics = service.getAllTopics();
-        System.out.println("\nSelecciona la oposición/bloque: ");
+        System.out.println("\nSelecciona la oposición/bloque: (nº de preguntas disponibles)");
 
-        int index = 1;
+        List<OppositionTopic> activeTopics = new ArrayList<>();
         for (OppositionTopic ot : topics) {
-            System.out.println(index + ".- " + ot.name() + " -> " + ot.getDescription());
-            index++;
+            if (service.getQuestionCount(ot) > 0) {
+                activeTopics.add(ot);
+            }
+        }
+
+        for (int i = 0; i < activeTopics.size(); i++) {
+            OppositionTopic ot = activeTopics.get(i);
+            System.out.println(i + 1 + ".- " + ot.name() + " -> " + ot.getDescription() +
+                    " (" + service.getQuestionCount(ot) + ")");
         }
 
         int response = 0;
         boolean isValid = false;
-        do {
+        do
+        {
             System.out.print("Opción: ");
             try {
                 response = Integer.parseInt(kb.nextLine());
-                if(response < 1 || response > topics.length){
+                if (response < 1 || response > activeTopics.size()) {
                     throw new IllegalArgumentException();
                 }
                 isValid = true;
-            } catch (IllegalArgumentException e) {   // parseInt && outside a certain range (topics.length)
-                System.out.println(ConsoleUIColor.RED + "El valor introducido no es válido" + ConsoleUIColor.RESET);
+            } catch (
+                    IllegalArgumentException e) {
+                System.out.println(ConsoleUIColor.RED + "El valor introducido no es válido" +
+                        ConsoleUIColor.RESET);
                 response = 0;  // continue in loop
             }
         } while (!isValid);
 
-        return topics[response - 1];
+        return activeTopics.get(response - 1);
     }
 
     private void displayQuestion(Question question) {
@@ -91,18 +104,22 @@ public class ConsoleUI {
         }
     }
 
-    private int translateResponse(int options) {
-        String letter = kb.nextLine().toLowerCase().trim();
-        if (letter.isEmpty()) {
+    private int translateResponse(int optionsCount) {
+        String input = kb.nextLine().toLowerCase().trim();
+        if (input.isEmpty()) {
             return -2;
+        }
+
+        char maxLetter = (char) ('a' + optionsCount - 1);
+        String regex = "^[a-" + maxLetter + "]$";
+
+        if (input.matches(regex)) {
+            return input.charAt(0) - 'a';
         } else {
-            String validLetters = "abcdefghijklmnopqrstuvwxyz";  //TODO: regex¿?
-            int response = validLetters.indexOf(letter);
-            if (response == -1 || response >= options) {
-                return -1;
-            } else return response;
+            return -1;
         }
     }
+
 
     private void displayResults(Exam exam) {
         exam.calculateFinalScore();

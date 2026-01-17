@@ -24,19 +24,19 @@ public class QuestionService {
     }
 
     /* This method create a new Exam for a UI filtering by topic (see enums in model package) */
-    public Exam createNewExam(OppositionTopic topic){
+    public Exam createNewExam(OppositionTopic topic) {
         List<Question> allQuestions = getExamQuestions();
         List<Question> filtered = allQuestions.stream()
                 .filter(q -> topic.includes(q.getTopic()))
                 .collect(Collectors.toCollection(ArrayList::new));
         Collections.shuffle(filtered);
-        for(Question q : filtered){
+        for (Question q : filtered) {
             q.shuffleOptions();
         }
         return new Exam(topic.getDescription(), filtered, topic);
     }
 
-    public OppositionTopic[] getAllTopics(){
+    public OppositionTopic[] getAllTopics() {
         return OppositionTopic.values();
     }
 
@@ -46,5 +46,12 @@ public class QuestionService {
             return false;
         }
         return options.get(response).isCorrect();
+    }
+
+    public int getQuestionCount(OppositionTopic topic) {
+        long questionsCount = getExamQuestions().stream()
+                .filter(q -> topic.includes(q.getTopic()))
+                .count();
+        return (int) questionsCount;
     }
 }

@@ -27,6 +27,9 @@ public enum OppositionTopic {
 
     /* this method allow to filter in service the questions by block or select all */
     public boolean includes(OppositionTopic other) {
+        if(other == null){
+            return false;
+        }
         if (this.isGeneral) {
             return this.opposition == other.getOpposition();
         }
