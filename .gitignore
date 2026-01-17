@@ -30,4 +30,5 @@ bin/
 .DS_Store
 
 questions*
+results.txt
 /Agent

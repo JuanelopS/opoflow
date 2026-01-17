@@ -84,8 +84,13 @@ public class Exam {
     }
 
     public void calculateFinalScore(){
-        double hits = correct * topic.getOpposition().getHit();
-        double errors = incorrect * topic.getOpposition().getError();
+        double hits = correct * topic.getOpposition().getCorrect();
+        double errors = incorrect * topic.getOpposition().getIncorrect();
         setScore(hits - errors);
+    }
+
+    public ExamResult finish(){
+        this.calculateFinalScore();
+        return new ExamResult(this.topic, this.correct, this.incorrect, this.unanswered, this.score);
     }
 }

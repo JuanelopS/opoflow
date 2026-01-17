@@ -1,9 +1,6 @@
 package dev.jugapi.opoflow.service;
 
-import dev.jugapi.opoflow.model.Exam;
-import dev.jugapi.opoflow.model.OppositionTopic;
-import dev.jugapi.opoflow.model.Option;
-import dev.jugapi.opoflow.model.Question;
+import dev.jugapi.opoflow.model.*;
 import dev.jugapi.opoflow.repository.QuestionRepository;
 
 import java.util.ArrayList;
@@ -55,5 +52,9 @@ public class QuestionService {
                 .filter(q -> topic.includes(q.getTopic()))
                 .count();
         return (int) questionsCount;
+    }
+
+    public void saveResult(ExamResult result) {
+        repository.saveResult(result);
     }
 }

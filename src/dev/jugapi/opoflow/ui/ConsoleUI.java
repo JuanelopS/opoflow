@@ -1,9 +1,6 @@
 package dev.jugapi.opoflow.ui;
 
-import dev.jugapi.opoflow.model.Exam;
-import dev.jugapi.opoflow.model.OppositionTopic;
-import dev.jugapi.opoflow.model.Option;
-import dev.jugapi.opoflow.model.Question;
+import dev.jugapi.opoflow.model.*;
 import dev.jugapi.opoflow.service.QuestionService;
 
 import java.util.ArrayList;
@@ -52,7 +49,10 @@ public class ConsoleUI {
                         ConsoleUIColor.RED + "Respuesta incorrecta" + ConsoleUIColor.RESET);
             }
         }
-        displayResults(exam);
+
+        ExamResult result = exam.finish();
+        service.saveResult(result);  // persist results
+        displayResults(result);
     }
 
     // TODO: handle exams that do not yet have questions
@@ -120,12 +120,10 @@ public class ConsoleUI {
         }
     }
 
-
-    private void displayResults(Exam exam) {
-        exam.calculateFinalScore();
-        System.out.println("Correctas: " + exam.getCorrect());
-        System.out.println("Incorrectas: " + exam.getIncorrect());
-        System.out.println("Sin contestar: " + exam.getUnanswered());
-        System.out.printf("Puntuación: %.2f", exam.getScore());
+    private void displayResults(ExamResult result) {
+        System.out.println("Correctas: " + result.getCorrect());
+        System.out.println("Incorrectas: " + result.getIncorrect());
+        System.out.println("Sin contestar: " + result.getUnanswered());
+        System.out.printf("Puntuación: %.2f", result.getScore());
     }
 }

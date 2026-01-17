@@ -1,11 +1,11 @@
 package dev.jugapi.opoflow.repository;
 
+import dev.jugapi.opoflow.model.ExamResult;
 import dev.jugapi.opoflow.model.OppositionTopic;
 import dev.jugapi.opoflow.model.Option;
 import dev.jugapi.opoflow.model.Question;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -34,7 +34,8 @@ public class FileQuestionRepository implements QuestionRepository {
             while (reader.hasNextLine()) {
                 cont++;
                 String line = reader.nextLine();
-                if (line.isBlank()) continue;
+                if (line.isBlank())
+                    continue;
 
                 String[] segments = line.split(";");
                 if (segments.length < 7) {
@@ -46,7 +47,8 @@ public class FileQuestionRepository implements QuestionRepository {
                 String prompt = segments[INDEX_PROMPT];
                 try {
                     correctOption = Integer.parseInt(segments[INDEX_CORRECT_ANSWER].trim());
-                } catch (NumberFormatException e) {
+                } catch (
+                        NumberFormatException e) {
                     formatFileErrorMsg(cont, archive);
                     continue;
                 }
@@ -71,14 +73,38 @@ public class FileQuestionRepository implements QuestionRepository {
                 questions.add(question);
             }
 
-        } catch (FileNotFoundException e) {
+        } catch (
+                FileNotFoundException e) {
             System.out.println("Archivo de preguntas no encontrado: " + e.getMessage());
         }
 
         return questions;
     }
 
-    public void formatFileErrorMsg(int cont, File archive){System.err.println("Línea " + cont +
+    @Override
+    public void saveResult(ExamResult result) {
+        String filename = "results.txt";
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))){
+            String line = result.getDate().toString() + ";" +
+                    result.getTopic().name() +
+                    ";" +
+                    result.getCorrect() +
+                    ";" +
+                    result.getIncorrect() +
+                    ";" +
+                    result.getUnanswered() +
+                    ";" +
+                    result.getScore();
+            writer.println(line);
+        } catch (
+                IOException e) {
+            System.err.println("Se ha producido un error guardando el resultado del test.");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void formatFileErrorMsg(int cont, File archive) {
+        System.err.println("Línea " + cont +
                 ": Formato incorrecto. Revisa el formato del archivo de preguntas (" +
                 archive.getName() + ")");
     }
