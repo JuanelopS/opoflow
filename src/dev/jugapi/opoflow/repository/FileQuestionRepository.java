@@ -12,22 +12,23 @@ import java.util.Scanner;
 
 public class FileQuestionRepository implements QuestionRepository {
 
-    private final String fileName;
+    private final String questionsFilename;
+    private final String resultsFilename;
 
     private static final int INDEX_TOPIC = 0;
     private static final int INDEX_PROMPT = 1;
     private static final int INDEX_OPTIONS_START = 2;
     private static final int INDEX_CORRECT_ANSWER = 6;
 
-    public FileQuestionRepository(String fileName) {
-        this.fileName = fileName;
+    public FileQuestionRepository(String questionsFilename, String resultsFilename) {
+        this.questionsFilename = questionsFilename;
+        this.resultsFilename = resultsFilename;
     }
 
     @Override
     public List<Question> retrieveQuestions() {
-
         List<Question> questions = new ArrayList<>();
-        File archive = new File(this.fileName);
+        File archive = new File(this.questionsFilename);
 
         try (Scanner reader = new Scanner(archive)) {
             int cont = 0;
@@ -83,18 +84,15 @@ public class FileQuestionRepository implements QuestionRepository {
 
     @Override
     public void saveResult(ExamResult result) {
-        String filename = "results.txt";
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))){
-            String line = result.getDate().toString() + ";" +
-                    result.getTopic().name() +
-                    ";" +
-                    result.getCorrect() +
-                    ";" +
-                    result.getIncorrect() +
-                    ";" +
-                    result.getUnanswered() +
-                    ";" +
-                    result.getScore();
+        try (PrintWriter writer = new PrintWriter(new FileWriter(resultsFilename, true))) {
+            String line = String.format("%s;%s;%s;%d;%d;%d;%.2f",
+                    result.getUser().getId(),
+                    result.getUser().getName(),
+                    result.getTopic().name(),
+                    result.getCorrect(),
+                    result.getIncorrect(),
+                    result.getUnanswered(),
+                    result.getScore());
             writer.println(line);
         } catch (
                 IOException e) {

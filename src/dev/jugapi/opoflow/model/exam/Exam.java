@@ -1,5 +1,7 @@
 package dev.jugapi.opoflow.model.exam;
 
+import dev.jugapi.opoflow.model.user.User;
+
 import java.util.List;
 
 public class Exam {
@@ -9,16 +11,13 @@ public class Exam {
     private int currentQuestionIndex;
     private double score;
     private OppositionTopic topic;
-    /*
-    TODO: Correct and incorrect: because each competitive exam is graded differently, so that in the future a method
-     will
-    give me the final score according to the type of exam. For now, I will only use +1 for the score.
-    */
+    private final User user;
+
     private int correct;
     private int incorrect;
     private int unanswered;
 
-    public Exam(String title, List<Question> questions, OppositionTopic topic) {
+    public Exam(String title, List<Question> questions, OppositionTopic topic, User user) {
         this.title = title;
         this.questions = questions;
         this.currentQuestionIndex = 0;
@@ -26,6 +25,7 @@ public class Exam {
         this.topic = topic;
         this.correct = 0;
         this.incorrect = 0;
+        this.user = user;
     }
 
     public String getTitle() {
@@ -60,6 +60,10 @@ public class Exam {
         return unanswered;
     }
 
+    public User getUser(){
+        return user;
+    }
+
     public Question getNextQuestion() {
         if (!hasMoreQuestions()) {
             return null;
@@ -91,6 +95,6 @@ public class Exam {
 
     public ExamResult finish(){
         this.calculateFinalScore();
-        return new ExamResult(this.topic, this.correct, this.incorrect, this.unanswered, this.score);
+        return new ExamResult(this.topic, this.correct, this.incorrect, this.unanswered, this.score, this.user);
     }
 }

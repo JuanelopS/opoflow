@@ -1,6 +1,7 @@
 package dev.jugapi.opoflow.ui;
 
 import dev.jugapi.opoflow.model.exam.*;
+import dev.jugapi.opoflow.model.user.User;
 import dev.jugapi.opoflow.service.QuestionService;
 
 import java.util.ArrayList;
@@ -18,13 +19,14 @@ public class ConsoleUI {
     }
 
     public void start() {
-        System.out.println("\t\t\t=== OPOFLOW ===");
-        OppositionTopic topic = selectTopic();
-        Exam exam = service.createNewExam(topic);
+        System.out.println("\t\t\t=== OPOFLOW ===\n");
+        User user = identifyUser();
+        System.out.println("Bienvenido " + user.getName() + "!");
 
+        OppositionTopic topic = selectTopic();
+        Exam exam = service.createNewExam(topic, user);
         List<Question> questions = exam.getQuestions();
         for (int i = 0; i < questions.size(); i++) {
-
             displayQuestion(questions.get(i), i + 1);
             System.out.print("Respuesta: ");
             int response;
@@ -55,9 +57,21 @@ public class ConsoleUI {
         displayResults(result);
     }
 
+    private User identifyUser() {
+        String name;
+        do
+        {
+            System.out.print("Introduce tu nombre: ");
+            name = kb.nextLine().trim();
+        } while (name.isEmpty());
+        return new User(name);
+    }
+
     private OppositionTopic selectTopic() {
         OppositionTopic[] topics = service.getAllTopics();
-        System.out.println("\nSelecciona la oposición/bloque: (nº de preguntas disponibles)");
+        System.out.println(ConsoleUIColor.BLUE +
+                "\nSelecciona la oposición/bloque: (nº de preguntas disponibles)"
+                + ConsoleUIColor.RESET);
 
         List<OppositionTopic> activeTopics = new ArrayList<>();
         for (OppositionTopic ot : topics) {

@@ -1,5 +1,7 @@
 package dev.jugapi.opoflow.model.exam;
 
+import dev.jugapi.opoflow.model.user.User;
+
 import java.time.LocalDate;
 
 public class ExamResult {
@@ -9,16 +11,16 @@ public class ExamResult {
     private int unanswered;
     private double score;
     private LocalDate date;
+    private User user;
 
-    // TODO: add user to "log"
-
-    public ExamResult(OppositionTopic topic, int correct, int incorrect, int unanswered, double score) {
+    public ExamResult(OppositionTopic topic, int correct, int incorrect, int unanswered, double score, User user) {
         this.topic = topic;
         this.correct = correct;
         this.incorrect = incorrect;
         this.unanswered = unanswered;
         this.score = score;
         this.date = LocalDate.now();
+        this.user = user;
     }
 
     public OppositionTopic getTopic() {
@@ -43,5 +45,9 @@ public class ExamResult {
 
     public LocalDate getDate() {
         return date;
+    }
+
+    public User getUser() {
+        return user;
     }
 }

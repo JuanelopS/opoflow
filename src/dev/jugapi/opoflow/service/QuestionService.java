@@ -1,6 +1,7 @@
 package dev.jugapi.opoflow.service;
 
 import dev.jugapi.opoflow.model.exam.*;
+import dev.jugapi.opoflow.model.user.User;
 import dev.jugapi.opoflow.repository.QuestionRepository;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class QuestionService {
     }
 
     /* This method create a new Exam for a UI filtering by topic (see enums in model package) */
-    public Exam createNewExam(OppositionTopic topic) {
+    public Exam createNewExam(OppositionTopic topic, User user) {
         List<Question> allQuestions = getExamQuestions();
         List<Question> filtered = allQuestions.stream()
                 .filter(q -> topic.includes(q.getTopic()))
@@ -32,7 +33,7 @@ public class QuestionService {
         for (Question q : filtered) {
             q.shuffleOptions();
         }
-        return new Exam(topic.getDescription(), filtered, topic);
+        return new Exam(topic.getDescription(), filtered, topic, user);
     }
 
     public OppositionTopic[] getAllTopics() {
