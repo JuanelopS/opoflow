@@ -1,4 +1,4 @@
-package dev.jugapi.opoflow.model;
+package dev.jugapi.opoflow.model.exam;
 
 public class Option {
 

@@ -1,4 +1,4 @@
-package dev.jugapi.opoflow.model;
+package dev.jugapi.opoflow.model.exam;
 
 public enum OppositionTopic {
     TAI_ALL(Opposition.TAI_AGE_PART1, "Test de preguntas de todos los bloques de TAI_AGE", true),

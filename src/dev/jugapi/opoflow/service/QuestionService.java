@@ -1,6 +1,6 @@
 package dev.jugapi.opoflow.service;
 
-import dev.jugapi.opoflow.model.*;
+import dev.jugapi.opoflow.model.exam.*;
 import dev.jugapi.opoflow.repository.QuestionRepository;
 
 import java.util.ArrayList;

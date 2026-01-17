@@ -1,6 +1,6 @@
 package dev.jugapi.opoflow.ui;
 
-import dev.jugapi.opoflow.model.*;
+import dev.jugapi.opoflow.model.exam.*;
 import dev.jugapi.opoflow.service.QuestionService;
 
 import java.util.ArrayList;
@@ -22,15 +22,15 @@ public class ConsoleUI {
         OppositionTopic topic = selectTopic();
         Exam exam = service.createNewExam(topic);
 
-        for (Question q : exam.getQuestions()) {
-            // TODO: add number to question prompt
+        List<Question> questions = exam.getQuestions();
+        for (int i = 0; i < questions.size(); i++) {
 
-            displayQuestion(q);
+            displayQuestion(questions.get(i), i + 1);
             System.out.print("Respuesta: ");
             int response;
             do
             {
-                response = translateResponse(q.getOptions().size());
+                response = translateResponse(questions.get(i).getOptions().size());
                 if (response == -1) {
                     System.out.print(ConsoleUIColor.RED +
                             "Respuesta no válida. Por favor introduce un valor valido: " +
@@ -42,7 +42,7 @@ public class ConsoleUI {
                 System.out.println(ConsoleUIColor.BLUE + "Respuesta en blanco" + ConsoleUIColor.RESET);
                 exam.registerUnanswered();
             } else {
-                boolean isCorrect = service.checkAnswer(q, response);
+                boolean isCorrect = service.checkAnswer(questions.get(i), response);
                 exam.registerAnswer(isCorrect);
                 System.out.println(isCorrect ?
                         ConsoleUIColor.GREEN + "Respuesta correcta" + ConsoleUIColor.RESET :
@@ -55,7 +55,6 @@ public class ConsoleUI {
         displayResults(result);
     }
 
-    // TODO: handle exams that do not yet have questions
     private OppositionTopic selectTopic() {
         OppositionTopic[] topics = service.getAllTopics();
         System.out.println("\nSelecciona la oposición/bloque: (nº de preguntas disponibles)");
@@ -95,12 +94,13 @@ public class ConsoleUI {
         return activeTopics.get(response - 1);
     }
 
-    private void displayQuestion(Question question) {
-        char[] letters = {'a', 'b', 'c', 'd', 'e', 'f'};
-        int index = 0;
-        System.out.println("\n" + question.getPrompt());
-        for (Option o : question.getOptions()) {
-            System.out.println(letters[index++] + ") " + o.getAnswer());
+    private void displayQuestion(Question question, int index) {
+        System.out.println("\n" + index + ". " + question.getPrompt());
+
+        List<Option> options = question.getOptions();
+        for (int j = 0; j < options.size(); j++) {
+            char letter = (char) ('a' + j);  // int to char 0->a, 1->b...
+            System.out.println("   " + letter + ") " + options.get(j).getAnswer());
         }
     }
 

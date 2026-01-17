@@ -1,7 +1,7 @@
 package dev.jugapi.opoflow.repository;
 
-import dev.jugapi.opoflow.model.ExamResult;
-import dev.jugapi.opoflow.model.Question;
+import dev.jugapi.opoflow.model.exam.ExamResult;
+import dev.jugapi.opoflow.model.exam.Question;
 
 import java.util.List;
 

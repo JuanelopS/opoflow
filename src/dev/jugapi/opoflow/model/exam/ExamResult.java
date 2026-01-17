@@ -1,4 +1,4 @@
-package dev.jugapi.opoflow.model;
+package dev.jugapi.opoflow.model.exam;
 
 import java.time.LocalDate;
 

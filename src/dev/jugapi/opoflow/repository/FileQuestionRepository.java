@@ -1,9 +1,9 @@
 package dev.jugapi.opoflow.repository;
 
-import dev.jugapi.opoflow.model.ExamResult;
-import dev.jugapi.opoflow.model.OppositionTopic;
-import dev.jugapi.opoflow.model.Option;
-import dev.jugapi.opoflow.model.Question;
+import dev.jugapi.opoflow.model.exam.ExamResult;
+import dev.jugapi.opoflow.model.exam.OppositionTopic;
+import dev.jugapi.opoflow.model.exam.Option;
+import dev.jugapi.opoflow.model.exam.Question;
 
 import java.io.*;
 import java.util.ArrayList;
