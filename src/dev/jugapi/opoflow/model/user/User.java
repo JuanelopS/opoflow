@@ -11,6 +11,11 @@ public class User {
         this.name = name;
     }
 
+    public User(UUID id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public UUID getId() {
         return id;
     }
