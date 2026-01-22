@@ -2,6 +2,7 @@ package dev.jugapi.opoflow.ui;
 
 import dev.jugapi.opoflow.model.exam.*;
 import dev.jugapi.opoflow.model.user.User;
+import dev.jugapi.opoflow.service.ExamResultService;
 import dev.jugapi.opoflow.service.QuestionService;
 
 import java.util.ArrayList;
@@ -10,11 +11,13 @@ import java.util.Scanner;
 
 public class ConsoleUI {
 
-    private final QuestionService service;
+    private final QuestionService questionService;
+    private final ExamResultService examResultService;
     private final Scanner kb;
 
-    public ConsoleUI(QuestionService service) {
-        this.service = service;
+    public ConsoleUI(QuestionService questionService, ExamResultService examResultService) {
+        this.questionService = questionService;
+        this.examResultService = examResultService;
         this.kb = new Scanner(System.in);
     }
 
@@ -24,7 +27,7 @@ public class ConsoleUI {
         System.out.println("Bienvenido " + user.getName() + "!");
 
         OppositionTopic topic = selectTopic();
-        Exam exam = service.createNewExam(topic, user);
+        Exam exam = questionService.createNewExam(topic, user);
         List<Question> questions = exam.getQuestions();
         for (int i = 0; i < questions.size(); i++) {
             displayQuestion(questions.get(i), i + 1);
@@ -44,7 +47,7 @@ public class ConsoleUI {
                 System.out.println(ConsoleUIColor.BLUE + "Respuesta en blanco" + ConsoleUIColor.RESET);
                 exam.registerUnanswered();
             } else {
-                boolean isCorrect = service.checkAnswer(questions.get(i), response);
+                boolean isCorrect = questionService.checkAnswer(questions.get(i), response);
                 exam.registerAnswer(isCorrect);
                 System.out.println(isCorrect ?
                         ConsoleUIColor.GREEN + "Respuesta correcta" + ConsoleUIColor.RESET :
@@ -53,7 +56,7 @@ public class ConsoleUI {
         }
 
         ExamResult result = exam.finish();
-        service.saveResult(result);  // persist results
+        examResultService.saveResult(result);  // persist results
         displayResults(result);
     }
 
@@ -68,14 +71,14 @@ public class ConsoleUI {
     }
 
     private OppositionTopic selectTopic() {
-        OppositionTopic[] topics = service.getAllTopics();
+        OppositionTopic[] topics = questionService.getAllTopics();
         System.out.println(ConsoleUIColor.BLUE +
                 "\nSelecciona la oposición/bloque: (nº de preguntas disponibles)"
                 + ConsoleUIColor.RESET);
 
         List<OppositionTopic> activeTopics = new ArrayList<>();
         for (OppositionTopic ot : topics) {
-            if (service.getQuestionCount(ot) > 0) {
+            if (questionService.getQuestionCount(ot) > 0) {
                 activeTopics.add(ot);
             }
         }
@@ -83,7 +86,7 @@ public class ConsoleUI {
         for (int i = 0; i < activeTopics.size(); i++) {
             OppositionTopic ot = activeTopics.get(i);
             System.out.println(i + 1 + ".- " + ot.name() + " -> " + ot.getDescription() +
-                    " (" + service.getQuestionCount(ot) + ")");
+                    " (" + questionService.getQuestionCount(ot) + ")");
         }
 
         int response;

@@ -1,6 +1,5 @@
 package dev.jugapi.opoflow.repository;
 
-import dev.jugapi.opoflow.model.exam.ExamResult;
 import dev.jugapi.opoflow.model.exam.OppositionTopic;
 import dev.jugapi.opoflow.model.exam.Option;
 import dev.jugapi.opoflow.model.exam.Question;
@@ -13,16 +12,14 @@ import java.util.Scanner;
 public class FileQuestionRepository implements QuestionRepository {
 
     private final String questionsFilename;
-    private final String resultsFilename;
 
     private static final int INDEX_TOPIC = 0;
     private static final int INDEX_PROMPT = 1;
     private static final int INDEX_OPTIONS_START = 2;
     private static final int INDEX_CORRECT_ANSWER = 6;
 
-    public FileQuestionRepository(String questionsFilename, String resultsFilename) {
+    public FileQuestionRepository(String questionsFilename) {
         this.questionsFilename = questionsFilename;
-        this.resultsFilename = resultsFilename;
     }
 
     @Override
@@ -80,25 +77,6 @@ public class FileQuestionRepository implements QuestionRepository {
         }
 
         return questions;
-    }
-
-    @Override
-    public void saveResult(ExamResult result) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(resultsFilename, true))) {
-            String line = String.format("%s;%s;%s;%d;%d;%d;%.2f",
-                    result.getUser().getId(),
-                    result.getUser().getName(),
-                    result.getTopic().name(),
-                    result.getCorrect(),
-                    result.getIncorrect(),
-                    result.getUnanswered(),
-                    result.getScore());
-            writer.println(line);
-        } catch (
-                IOException e) {
-            System.err.println("Se ha producido un error guardando el resultado del test.");
-            throw new RuntimeException(e);
-        }
     }
 
     public void formatFileErrorMsg(int cont, File archive) {

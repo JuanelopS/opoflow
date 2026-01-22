@@ -8,5 +8,4 @@ import java.util.List;
 public interface QuestionRepository {
 
     List<Question> retrieveQuestions();
-    void saveResult(ExamResult result);
 }

@@ -3,7 +3,6 @@ package dev.jugapi.opoflow.service;
 import dev.jugapi.opoflow.model.exam.*;
 import dev.jugapi.opoflow.model.user.User;
 import dev.jugapi.opoflow.repository.QuestionRepository;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,12 +10,12 @@ import java.util.stream.Collectors;
 
 public class QuestionService {
 
-    private final QuestionRepository repository;
+    private final QuestionRepository questionRepository;
     private final List<Question> allQuestions;
 
-    public QuestionService(QuestionRepository repository) {
-        this.repository = repository;
-        this.allQuestions = repository.retrieveQuestions();
+    public QuestionService(QuestionRepository questionRepository) {
+        this.questionRepository = questionRepository;
+        this.allQuestions = questionRepository.retrieveQuestions();
     }
 
     public List<Question> getExamQuestions() {
@@ -53,9 +52,5 @@ public class QuestionService {
                 .filter(q -> topic.includes(q.getTopic()))
                 .count();
         return (int) questionsCount;
-    }
-
-    public void saveResult(ExamResult result) {
-        repository.saveResult(result);
     }
 }
