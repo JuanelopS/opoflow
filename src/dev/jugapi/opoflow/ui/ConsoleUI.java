@@ -56,7 +56,7 @@ public class ConsoleUI {
         }
 
         ExamResult result = exam.finish();
-        examResultService.saveResult(result);  // persist results
+        examResultService.save(result);  // persist results
         displayResults(result);
     }
 

@@ -13,10 +13,10 @@ public class FileQuestionRepository implements QuestionRepository {
 
     private final String questionsFilename;
 
-    private static final int INDEX_TOPIC = 0;
-    private static final int INDEX_PROMPT = 1;
-    private static final int INDEX_OPTIONS_START = 2;
-    private static final int INDEX_CORRECT_ANSWER = 6;
+    private static final int INDEX_QUESTION_TOPIC = 0;
+    private static final int INDEX_QUESTION_PROMPT = 1;
+    private static final int INDEX_QUESTION_OPTIONS_START = 2;
+    private static final int INDEX_QUESTION_CORRECT_ANSWER = 6;
 
     public FileQuestionRepository(String questionsFilename) {
         this.questionsFilename = questionsFilename;
@@ -42,9 +42,9 @@ public class FileQuestionRepository implements QuestionRepository {
                 }
 
                 int correctOption;
-                String prompt = segments[INDEX_PROMPT];
+                String prompt = segments[INDEX_QUESTION_PROMPT];
                 try {
-                    correctOption = Integer.parseInt(segments[INDEX_CORRECT_ANSWER].trim());
+                    correctOption = Integer.parseInt(segments[INDEX_QUESTION_CORRECT_ANSWER].trim());
                 } catch (
                         NumberFormatException e) {
                     formatFileErrorMsg(cont, archive);
@@ -53,14 +53,14 @@ public class FileQuestionRepository implements QuestionRepository {
 
                 List<Option> options = new ArrayList<>();
                 for (int i = 0; i < 4; i++) {
-                    String textOption = segments[i + INDEX_OPTIONS_START].trim();
+                    String textOption = segments[i + INDEX_QUESTION_OPTIONS_START].trim();
                     boolean isCorrect = (i + 1 == correctOption);
                     options.add(new Option(textOption, isCorrect));
                 }
 
                 OppositionTopic topic = null;
                 try {
-                    topic = OppositionTopic.valueOf(segments[INDEX_TOPIC].toUpperCase().trim());
+                    topic = OppositionTopic.valueOf(segments[INDEX_QUESTION_TOPIC].toUpperCase().trim());
                 } catch (
                         IllegalArgumentException e) {
                     formatFileErrorMsg(cont, archive);

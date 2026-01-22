@@ -95,6 +95,6 @@ public class Exam {
 
     public ExamResult finish(){
         this.calculateFinalScore();
-        return new ExamResult(this.topic, this.correct, this.incorrect, this.unanswered, this.score, this.user);
+        return new ExamResult(this.user, this.topic, this.correct, this.incorrect, this.unanswered, this.score);
     }
 }

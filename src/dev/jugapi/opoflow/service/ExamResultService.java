@@ -11,7 +11,7 @@ public class ExamResultService {
         this.examResultRepository = examResultRepository;
     }
 
-    public void saveResult(ExamResult result) {
+    public void save(ExamResult result) {
         examResultRepository.saveResult(result);
     }
 }

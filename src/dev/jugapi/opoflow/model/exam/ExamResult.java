@@ -13,14 +13,14 @@ public class ExamResult {
     private LocalDate date;
     private User user;
 
-    public ExamResult(OppositionTopic topic, int correct, int incorrect, int unanswered, double score, User user) {
+    public ExamResult(User user, OppositionTopic topic, int correct, int incorrect, int unanswered, double score) {
+        this.user = user;
         this.topic = topic;
         this.correct = correct;
         this.incorrect = incorrect;
         this.unanswered = unanswered;
         this.score = score;
         this.date = LocalDate.now();
-        this.user = user;
     }
 
     public OppositionTopic getTopic() {
