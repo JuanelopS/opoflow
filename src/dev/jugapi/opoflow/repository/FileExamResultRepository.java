@@ -45,7 +45,7 @@ public class FileExamResultRepository implements ExamResultRepository {
     }
 
     @Override
-    public List<ExamResult> getResultsByUser(User user) {
+    public List<ExamResult> findByUser(User user) {
         if (!new File(resultsFilename).exists()) {
             return new ArrayList<>();
         }

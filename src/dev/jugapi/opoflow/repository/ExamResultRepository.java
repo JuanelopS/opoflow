@@ -8,5 +8,5 @@ import java.util.List;
 public interface ExamResultRepository {
 
     void save(ExamResult result);
-    List<ExamResult> getResultsByUser (User user);
+    List<ExamResult> findByUser(User user);
 }
