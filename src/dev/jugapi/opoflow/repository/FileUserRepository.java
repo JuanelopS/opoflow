@@ -38,7 +38,13 @@ public class FileUserRepository implements UserRepository {
         }
         try (Stream<String> lines = Files.lines(path)) {
             return lines
-                    .filter(line -> line.contains(";" + name))
+                    .filter(line -> {
+                        String[] parts = line.split(";");
+                        if(parts.length > INDEX_USER_NAME){
+                            return parts[INDEX_USER_NAME].equalsIgnoreCase(name);
+                        }
+                        return false;
+                    })
                     .map(line -> {
                         String[] divided = line.split(";");
                         return new User(UUID.fromString(divided[INDEX_USER_UUID]), divided[INDEX_USER_NAME]);
