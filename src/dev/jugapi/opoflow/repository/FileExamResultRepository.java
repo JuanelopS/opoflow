@@ -29,7 +29,7 @@ public class FileExamResultRepository implements ExamResultRepository {
     @Override
     public void save(ExamResult result) {
         try{
-            String line = String.format("%s;%s;%s;%d;%d;%d;%.2f",
+            String line = String.format("%s;%s;%s;%d;%d;%d;%.2f" + System.lineSeparator(),
                     result.getUser().getId(),
                     result.getUser().getName(),
                     result.getTopic().name(),
