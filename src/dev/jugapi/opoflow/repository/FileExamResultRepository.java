@@ -7,6 +7,7 @@ import dev.jugapi.opoflow.model.user.User;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +28,7 @@ public class FileExamResultRepository implements ExamResultRepository {
 
     @Override
     public void save(ExamResult result) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(resultsFilename, true))) {
+        try{
             String line = String.format("%s;%s;%s;%d;%d;%d;%.2f",
                     result.getUser().getId(),
                     result.getUser().getName(),
@@ -36,7 +37,11 @@ public class FileExamResultRepository implements ExamResultRepository {
                     result.getIncorrect(),
                     result.getUnanswered(),
                     result.getScore());
-            writer.println(line);
+            Files.writeString(
+                    Path.of(resultsFilename),
+                    line,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.APPEND);
         } catch (
                 IOException e) {
             System.err.println("Se ha producido un error guardando el resultado del test.");
