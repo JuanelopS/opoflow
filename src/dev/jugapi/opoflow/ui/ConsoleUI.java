@@ -25,11 +25,35 @@ public class ConsoleUI {
     }
 
     public void start() {
-        System.out.println("\t\t\t=== OPOFLOW ===\n");
+        System.out.println("--- OPOFLOW ---\n");
         User user = identifyUser();
-
         System.out.println("Bienvenido " + user.getName() + "!");
 
+        boolean exit = false;
+        while (!exit) {
+
+            System.out.println("\n--- MENÚ PRINCIPAL ---");
+            System.out.println(ConsoleUIColor.BLUE + "Escoge una de las siguientes opciones: " + ConsoleUIColor.RESET);
+            System.out.println("1. Nuevo test");
+            System.out.println("2. Ver tus estadísticas");
+            System.out.println("3. Salir");
+            System.out.print("Selecciona una opción: ");
+            String option = kb.nextLine();
+
+            switch (option) {
+                case "1" ->
+                        runExam(user);
+                case "2" ->
+                        showStatistics(user);
+                case "3" ->
+                        exit = true;
+                default ->
+                        System.out.println(ConsoleUIColor.RED + "Opción incorrecta!" + ConsoleUIColor.RESET);
+            }
+        }
+    }
+
+    public void runExam(User user) {
         OppositionTopic topic = selectTopic();
         Exam exam = questionService.createNewExam(topic, user);
         List<Question> questions = exam.getQuestions();
@@ -146,5 +170,17 @@ public class ConsoleUI {
         System.out.println("Incorrectas: " + result.getIncorrect());
         System.out.println("Sin contestar: " + result.getUnanswered());
         System.out.printf("Puntuación: %.2f", result.getScore());
+    }
+
+    private void showStatistics(User user) {
+        List<ExamResult> list = examResultService.findByUser(user);
+
+        if (list.isEmpty()) {
+            System.out.println("No hay estadísticas registradas para tu usuario");
+        } else {
+            for (ExamResult e : list) {
+                System.out.println(e.getDate() + " - " + e.getTopic().name() + ": " + e.getScore());
+            }
+        }
     }
 }
