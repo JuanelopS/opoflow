@@ -10,12 +10,12 @@ import java.util.stream.Collectors;
 
 public class QuestionService {
 
-    private final QuestionRepository questionRepository;
+    private final QuestionRepository repository;
     private final List<Question> allQuestions;
 
-    public QuestionService(QuestionRepository questionRepository) {
-        this.questionRepository = questionRepository;
-        this.allQuestions = questionRepository.retrieveQuestions();
+    public QuestionService(QuestionRepository repository) {
+        this.repository = repository;
+        this.allQuestions = repository.retrieveQuestions();
     }
 
     public List<Question> getExamQuestions() {

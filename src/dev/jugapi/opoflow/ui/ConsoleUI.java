@@ -4,6 +4,7 @@ import dev.jugapi.opoflow.model.exam.*;
 import dev.jugapi.opoflow.model.user.User;
 import dev.jugapi.opoflow.service.ExamResultService;
 import dev.jugapi.opoflow.service.QuestionService;
+import dev.jugapi.opoflow.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,17 +14,20 @@ public class ConsoleUI {
 
     private final QuestionService questionService;
     private final ExamResultService examResultService;
+    private final UserService userService;
     private final Scanner kb;
 
-    public ConsoleUI(QuestionService questionService, ExamResultService examResultService) {
+    public ConsoleUI(QuestionService questionService, ExamResultService examResultService, UserService userService) {
         this.questionService = questionService;
         this.examResultService = examResultService;
+        this.userService = userService;
         this.kb = new Scanner(System.in);
     }
 
     public void start() {
         System.out.println("\t\t\t=== OPOFLOW ===\n");
         User user = identifyUser();
+
         System.out.println("Bienvenido " + user.getName() + "!");
 
         OppositionTopic topic = selectTopic();
@@ -56,7 +60,7 @@ public class ConsoleUI {
         }
 
         ExamResult result = exam.finish();
-        examResultService.save(result);  // persist results
+        examResultService.save(result);
         displayResults(result);
     }
 
@@ -67,7 +71,7 @@ public class ConsoleUI {
             System.out.print("Introduce tu nombre: ");
             name = kb.nextLine().trim();
         } while (name.isEmpty());
-        return new User(name);
+        return userService.loginOrRegister(name);
     }
 
     private OppositionTopic selectTopic() {

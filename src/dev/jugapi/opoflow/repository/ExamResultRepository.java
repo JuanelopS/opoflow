@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface ExamResultRepository {
 
-    void saveResult(ExamResult result);
+    void save(ExamResult result);
     List<ExamResult> getResultsByUser (User user);
 }

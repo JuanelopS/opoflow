@@ -5,13 +5,13 @@ import dev.jugapi.opoflow.repository.ExamResultRepository;
 
 public class ExamResultService {
 
-    private final ExamResultRepository examResultRepository;
+    private final ExamResultRepository repository;
 
-    public ExamResultService(ExamResultRepository examResultRepository) {
-        this.examResultRepository = examResultRepository;
+    public ExamResultService(ExamResultRepository repository) {
+        this.repository = repository;
     }
 
     public void save(ExamResult result) {
-        examResultRepository.saveResult(result);
+        repository.save(result);
     }
 }

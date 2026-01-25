@@ -26,7 +26,7 @@ public class FileExamResultRepository implements ExamResultRepository {
     }
 
     @Override
-    public void saveResult(ExamResult result) {
+    public void save(ExamResult result) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(resultsFilename, true))) {
             String line = String.format("%s;%s;%s;%d;%d;%d;%.2f",
                     result.getUser().getId(),
