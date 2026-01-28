@@ -1,9 +1,7 @@
 package dev.jugapi.opoflow;
 
 import dev.jugapi.opoflow.repository.*;
-import dev.jugapi.opoflow.service.ExamResultService;
-import dev.jugapi.opoflow.service.QuestionService;
-import dev.jugapi.opoflow.service.UserService;
+import dev.jugapi.opoflow.service.*;
 import dev.jugapi.opoflow.ui.ConsoleUI;
 
 

@@ -26,10 +26,12 @@ public class FileExamResultRepository implements ExamResultRepository {
         this.resultsFilename = resultsFilename;
     }
 
+    // TODO: save datetime of exam result
     @Override
     public void save(ExamResult result) {
-        try{
-            String line = String.format("%s;%s;%s;%d;%d;%d;%.2f" + System.lineSeparator(),
+        try {
+            String line = String.format("%s;%s;%s;%s;%d;%d;%d;%.2f" + System.lineSeparator(),
+                    result.getDate(),
                     result.getUser().getId(),
                     result.getUser().getName(),
                     result.getTopic().name(),

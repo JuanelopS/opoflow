@@ -2,7 +2,7 @@ package dev.jugapi.opoflow.model.exam;
 
 import dev.jugapi.opoflow.model.user.User;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class ExamResult {
     private OppositionTopic topic;
@@ -10,7 +10,7 @@ public class ExamResult {
     private int incorrect;
     private int unanswered;
     private double score;
-    private LocalDate date;
+    private LocalDateTime date;
     private User user;
 
     public ExamResult(User user, OppositionTopic topic, int correct, int incorrect, int unanswered, double score) {
@@ -20,7 +20,7 @@ public class ExamResult {
         this.incorrect = incorrect;
         this.unanswered = unanswered;
         this.score = score;
-        this.date = LocalDate.now();
+        this.date = LocalDateTime.now();
     }
 
     public OppositionTopic getTopic() {
@@ -43,7 +43,7 @@ public class ExamResult {
         return score;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 

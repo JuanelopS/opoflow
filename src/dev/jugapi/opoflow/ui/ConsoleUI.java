@@ -166,10 +166,12 @@ public class ConsoleUI {
     }
 
     private void displayResults(ExamResult result) {
-        System.out.println("Correctas: " + result.getCorrect());
+        System.out.println(ConsoleUIColor.BLUE + "RESULTADOS: " + ConsoleUIColor.RESET);
+        System.out.println("\nCorrectas: " + result.getCorrect());
         System.out.println("Incorrectas: " + result.getIncorrect());
         System.out.println("Sin contestar: " + result.getUnanswered());
         System.out.printf("Puntuación: %.2f", result.getScore());
+        System.out.println();
     }
 
     private void showStatistics(User user) {
