@@ -2,6 +2,7 @@ package dev.jugapi.opoflow.model.exam;
 
 import dev.jugapi.opoflow.model.user.User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Exam {
@@ -95,6 +96,6 @@ public class Exam {
 
     public ExamResult finish(){
         this.calculateFinalScore();
-        return new ExamResult(this.user, this.topic, this.correct, this.incorrect, this.unanswered, this.score);
+        return new ExamResult(this.user, LocalDateTime.now(), this.topic, this.correct, this.incorrect, this.unanswered, this.score);
     }
 }

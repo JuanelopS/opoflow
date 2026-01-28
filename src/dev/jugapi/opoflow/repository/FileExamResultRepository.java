@@ -8,6 +8,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -16,11 +17,12 @@ import java.util.stream.Stream;
 public class FileExamResultRepository implements ExamResultRepository {
 
     private final String resultsFilename;
-    private static final int INDEX_RESULT_TOPIC = 2;
-    private static final int INDEX_RESULT_CORRECT = 3;
-    private static final int INDEX_RESULT_INCORRECT = 4;
-    private static final int INDEX_RESULT_UNANSWERED = 5;
-    private static final int INDEX_RESULT_SCORE = 6;
+    private static final int INDEX_RESULT_DATE = 1;
+    private static final int INDEX_RESULT_TOPIC = 3;
+    private static final int INDEX_RESULT_CORRECT = 4;
+    private static final int INDEX_RESULT_INCORRECT = 5;
+    private static final int INDEX_RESULT_UNANSWERED = 6;
+    private static final int INDEX_RESULT_SCORE = 7;
 
     public FileExamResultRepository(String resultsFilename) {
         this.resultsFilename = resultsFilename;
@@ -31,8 +33,8 @@ public class FileExamResultRepository implements ExamResultRepository {
     public void save(ExamResult result) {
         try {
             String line = String.format("%s;%s;%s;%s;%d;%d;%d;%.2f" + System.lineSeparator(),
-                    result.getDate(),
                     result.getUser().getId(),
+                    result.getDate(),
                     result.getUser().getName(),
                     result.getTopic().name(),
                     result.getCorrect(),
@@ -68,7 +70,8 @@ public class FileExamResultRepository implements ExamResultRepository {
                             int incorrect = Integer.parseInt(divided[INDEX_RESULT_INCORRECT]);
                             int unanswered = Integer.parseInt(divided[INDEX_RESULT_UNANSWERED]);
                             double score = Double.parseDouble(divided[INDEX_RESULT_SCORE]);
-                            return new ExamResult(user, topic, correct, incorrect, unanswered, score);
+                            LocalDateTime date = LocalDateTime.parse(divided[INDEX_RESULT_DATE]);
+                            return new ExamResult(user, date, topic, correct, incorrect, unanswered, score);
                         } catch (
                                 Exception e) {
                             return null;

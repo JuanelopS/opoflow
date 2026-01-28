@@ -6,6 +6,7 @@ import dev.jugapi.opoflow.service.ExamResultService;
 import dev.jugapi.opoflow.service.QuestionService;
 import dev.jugapi.opoflow.service.UserService;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -27,7 +28,7 @@ public class ConsoleUI {
     public void start() {
         System.out.println("--- OPOFLOW ---\n");
         User user = identifyUser();
-        System.out.println("Bienvenido " + user.getName() + "!");
+        System.out.println("Bienvenido " + user.getName() + "! (id: " + user.getId() + ")");
 
         boolean exit = false;
         while (!exit) {
@@ -66,7 +67,7 @@ public class ConsoleUI {
                 response = translateResponse(questions.get(i).getOptions().size());
                 if (response == -1) {
                     System.out.print(ConsoleUIColor.RED +
-                            "Respuesta no válida. Por favor introduce un valor valido: " +
+                            "Respuesta no válida. Vuelve a intentarlo: " +
                             ConsoleUIColor.RESET);
                 }
             } while (response == -1);
@@ -180,8 +181,9 @@ public class ConsoleUI {
         if (list.isEmpty()) {
             System.out.println("No hay estadísticas registradas para tu usuario");
         } else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
             for (ExamResult e : list) {
-                System.out.println(e.getDate() + " - " + e.getTopic().name() + ": " + e.getScore());
+                System.out.println(e.getDate().format(formatter) + " - " + e.getTopic().name() + ": " + e.getScore());
             }
         }
     }
