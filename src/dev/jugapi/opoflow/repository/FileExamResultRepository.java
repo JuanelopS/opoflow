@@ -28,7 +28,6 @@ public class FileExamResultRepository implements ExamResultRepository {
         this.resultsFilename = resultsFilename;
     }
 
-    // TODO: save datetime of exam result
     @Override
     public void save(ExamResult result) {
         try {

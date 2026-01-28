@@ -1,6 +1,7 @@
 package dev.jugapi.opoflow.ui;
 
 import dev.jugapi.opoflow.model.exam.*;
+import dev.jugapi.opoflow.model.stats.UserStatistics;
 import dev.jugapi.opoflow.model.user.User;
 import dev.jugapi.opoflow.service.ExamResultService;
 import dev.jugapi.opoflow.service.QuestionService;
@@ -176,15 +177,26 @@ public class ConsoleUI {
     }
 
     private void showStatistics(User user) {
-        List<ExamResult> list = examResultService.findByUser(user);
+        UserStatistics stats = examResultService.getUserStats(user);
+        if (stats.getTotalExams() == 0) {
+            System.out.println("No tienes datos todavía.");
+            return;
+        }
 
-        if (list.isEmpty()) {
-            System.out.println("No hay estadísticas registradas para tu usuario");
-        } else {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-            for (ExamResult e : list) {
-                System.out.println(e.getDate().format(formatter) + " - " + e.getTopic().name() + ": " + e.getScore());
-            }
+        System.out.printf("\t--- ESTADÍSTICAS DE %s ---%n", user.getName().toUpperCase());
+        System.out.printf("Total de exámenes: %d | Media global: %.2f | Récord: %.2f %n",
+                stats.getTotalExams(), stats.getAverageScore(), stats.getMaxScore());
+        System.out.println("-----------------------------------");
+
+        List<ExamResult> history = examResultService.findByUser(user);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        for (ExamResult e : history) {
+            String result = String.format("%s - %s(%s): %s",
+                    e.getDate().format(formatter),
+                    e.getTopic().name(),
+                    e.getTopic().getDescription(),
+                    e.getScore());
+            System.out.println(result);
         }
     }
 }
