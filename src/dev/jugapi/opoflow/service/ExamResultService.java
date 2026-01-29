@@ -56,4 +56,8 @@ public class ExamResultService {
 
         return new UserStatistics(totalExams, averageScore, maxScore, statsByTopic);
     }
+
+    public void delete(UUID id){
+        repository.delete(id);
+    }
 }

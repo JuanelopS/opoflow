@@ -3,12 +3,11 @@ package dev.jugapi.opoflow.ui;
 import dev.jugapi.opoflow.model.exam.*;
 import dev.jugapi.opoflow.model.stats.UserStatistics;
 import dev.jugapi.opoflow.model.user.User;
-import dev.jugapi.opoflow.service.ExamResultService;
-import dev.jugapi.opoflow.service.QuestionService;
-import dev.jugapi.opoflow.service.UserService;
+import dev.jugapi.opoflow.service.*;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,6 +18,7 @@ public class ConsoleUI {
     private final UserService userService;
     private final Scanner kb;
     private static final int MAX_HISTORY_ITEMS = 10;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
     public ConsoleUI(QuestionService questionService, ExamResultService examResultService, UserService userService) {
         this.questionService = questionService;
@@ -35,11 +35,12 @@ public class ConsoleUI {
         boolean exit = false;
         while (!exit) {
 
-            System.out.println(ConsoleUIColor.GREEN +  "\n\t--- MENÚ PRINCIPAL ---" + ConsoleUIColor.RESET);
+            System.out.println(ConsoleUIColor.GREEN + "\n\t--- MENÚ PRINCIPAL ---" + ConsoleUIColor.RESET);
             System.out.println(ConsoleUIColor.BLUE + "Escoge una de las siguientes opciones: " + ConsoleUIColor.RESET);
             System.out.println("1. Nuevo test");
             System.out.println("2. Ver tus estadísticas");
-            System.out.println("3. Salir");
+            System.out.println("3. Gestionar historial (borrar)");
+            System.out.println("4. Salir");
             System.out.print("Selecciona una opción: ");
             String option = kb.nextLine();
 
@@ -49,6 +50,8 @@ public class ConsoleUI {
                 case "2" ->
                         showStatistics(user);
                 case "3" ->
+                        manageHistory(user);
+                case "4" ->
                         exit = true;
                 default ->
                         System.out.println(ConsoleUIColor.RED + "Opción incorrecta!" + ConsoleUIColor.RESET);
@@ -180,7 +183,7 @@ public class ConsoleUI {
     private void showStatistics(User user) {
         UserStatistics stats = examResultService.getUserStats(user);
         if (stats.getTotalExams() == 0) {
-            System.out.println("No tienes datos todavía.");
+            System.out.println("\nNo tienes datos todavía.");
             return;
         }
 
@@ -189,28 +192,81 @@ public class ConsoleUI {
         printHistory(user);
     }
 
-    private void printTopicStats(User user, UserStatistics stats){
-        System.out.printf("%n\t--- ESTADÍSTICAS DE %s ---%n", user.getName().toUpperCase());
+    private void printTopicStats(User user, UserStatistics stats) {
+        System.out.printf(ConsoleUIColor.BLUE + "%n\t--- ESTADÍSTICAS DE %s ---%n",
+                user.getName().toUpperCase() + ConsoleUIColor.RESET);
         System.out.printf("Total de exámenes: %d | Media global: %.2f | Récord: %.2f %n%n",
                 stats.getTotalExams(), stats.getAverageScore(), stats.getMaxScore());
 
         System.out.println("Rendimiento por tema: ");
-        stats.getStats().forEach((topic, avg) -> {
-            System.out.printf("- %s: %.2f%n", topic.getDescription(), avg);
-        });
+        stats.getStats().forEach((topic, avg) ->
+                System.out.printf("- %s: %.2f%n", topic.getDescription(), avg));
     }
 
-    private void printHistory(User user) {
-        System.out.println("HISTORIAL (últimos 10):");
+    private List<ExamResult> printHistory(User user) {
+        System.out.println(ConsoleUIColor.BLUE + "HISTORIAL (últimos 10):" + ConsoleUIColor.RESET);
         List<ExamResult> history = examResultService.findByUser(user, MAX_HISTORY_ITEMS);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        int count = 0;
         for (ExamResult e : history) {
-            String result = String.format("%s - %s(%s): %s",
+            String result = String.format("%d. %s - %s(%s): %s",
+                    ++count,
                     e.getDate().format(formatter),
                     e.getTopic().name(),
                     e.getTopic().getDescription(),
                     e.getScore());
             System.out.println(result);
         }
+        return history;
+    }
+
+    public void manageHistory(User user) {
+        System.out.println();
+        List<ExamResult> history = Collections.emptyList();
+        int selected;
+        boolean isValid = false;
+        do
+        {
+            history = printHistory(user);
+            System.out.println(ConsoleUIColor.RED
+                    + "\n¿Deseas borrar un examen del historial?"
+                    + ConsoleUIColor.RESET);
+            System.out.print("Pulsa 0 para volver al menú o el nº del examen que deseas borrar: ");
+            try {
+                selected = Integer.parseInt(kb.nextLine().trim());
+                if (selected < 0 || selected > history.size()) {
+                    throw new NumberFormatException();
+                }
+                if (selected != 0) {
+                    ExamResult exam = history.get(selected - 1);
+
+                    System.out.print(ConsoleUIColor.RED + "¿Estás seguro que deseas borrar el examen "
+                            + selected
+                            + " de fecha " + exam.getDate().format(formatter)
+                            + " (Y/N)? ");
+
+                    String confirmation;
+                    boolean validConfirmation = false;
+                    do
+                    {
+                        confirmation = kb.nextLine().trim().toLowerCase();
+                        if (confirmation.equals("y")) {
+                            examResultService.delete(exam.getId());
+                            System.out.println("Borrando la opción " + selected + ".");
+                            isValid = true;
+                            validConfirmation = true;
+                        } else if (confirmation.equals("n")) {
+                            validConfirmation = true;
+                            System.out.println();
+                        } else
+                            System.out.println("Opción no válida!");
+                    } while (!validConfirmation);
+                } else {
+                    isValid = true;
+                }
+            } catch (
+                    NumberFormatException e) {
+                System.out.println(ConsoleUIColor.RED + "Opción no válida!" + ConsoleUIColor.RESET);
+            }
+        } while (!isValid);
     }
 }
