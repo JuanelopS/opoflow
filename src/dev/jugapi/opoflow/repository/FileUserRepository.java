@@ -38,24 +38,16 @@ public class FileUserRepository implements UserRepository {
         }
         try (Stream<String> lines = Files.lines(path)) {
             return lines
-                    .filter(line -> {
-                        String[] parts = line.split(";");
-                        if(parts.length > INDEX_USER_NAME){
-                            return parts[INDEX_USER_NAME].equalsIgnoreCase(name);
-                        }
-                        return false;
-                    })
                     .map(line -> {
-                        String[] divided = line.split(";");
-                        return new User(UUID.fromString(divided[INDEX_USER_UUID]), divided[INDEX_USER_NAME]);
+                        String[] parts = line.split(";");
+                        return new User(UUID.fromString(parts[INDEX_USER_UUID]), parts[INDEX_USER_NAME]);
                     })
+                    .filter(user -> user.getName().equalsIgnoreCase(name))
                     .findFirst()
                     .orElse(null);
-
         } catch (
                 IOException e) {
             throw new RuntimeException(e);
         }
     }
-
 }
