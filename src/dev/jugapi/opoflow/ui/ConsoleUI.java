@@ -184,6 +184,12 @@ public class ConsoleUI {
             return;
         }
 
+        printTopicStats(user, stats);
+        System.out.println("-----------------------------------");
+        printHistory(user);
+    }
+
+    private void printTopicStats(User user, UserStatistics stats){
         System.out.printf("%n\t--- ESTADÍSTICAS DE %s ---%n", user.getName().toUpperCase());
         System.out.printf("Total de exámenes: %d | Media global: %.2f | Récord: %.2f %n%n",
                 stats.getTotalExams(), stats.getAverageScore(), stats.getMaxScore());
@@ -192,9 +198,10 @@ public class ConsoleUI {
         stats.getStats().forEach((topic, avg) -> {
             System.out.printf("- %s: %.2f%n", topic.getDescription(), avg);
         });
+    }
 
-        System.out.println("-----------------------------------");
-        System.out.println("HISTORIAL (últimos 10:");
+    private void printHistory(User user) {
+        System.out.println("HISTORIAL (últimos 10):");
         List<ExamResult> history = examResultService.findByUser(user, MAX_HISTORY_ITEMS);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         for (ExamResult e : history) {
