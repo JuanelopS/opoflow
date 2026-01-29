@@ -87,4 +87,27 @@ public class FileExamResultRepository implements ExamResultRepository {
             return new ArrayList<>();
         }
     }
+
+    @Override
+    public void delete(UUID id) {
+        Path path = Path.of(resultsFilename);
+        List<String> different = new ArrayList<>();
+        try (Stream<String> lines = Files.lines(path)) {
+            different = lines.filter(line -> {
+                String[] divided = line.split(";");
+                return !divided[INDEX_RESULT_ID].equals(id.toString());
+            }).toList();
+        } catch (
+                IOException e) {
+            System.out.println("Error eliminado el resultado con id " + id.toString());
+        }
+
+        try {
+            Files.write(path, different);
+        } catch (
+                IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }
