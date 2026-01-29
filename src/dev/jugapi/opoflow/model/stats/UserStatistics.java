@@ -9,12 +9,13 @@ public class UserStatistics {
     private int totalExams;
     private double averageScore;
     private double maxScore;
-    private Map<OppositionTopic, Double> stats;  //TODO: statistics by topic
+    private Map<OppositionTopic, Double> stats;
 
-    public UserStatistics(int totalExams, double averageScore, double maxScore) {
+    public UserStatistics(int totalExams, double averageScore, double maxScore, Map<OppositionTopic, Double> stats) {
         this.totalExams = totalExams;
         this.averageScore = averageScore;
         this.maxScore = maxScore;
+        this.stats = stats;
     }
 
     public int getTotalExams() {
@@ -39,5 +40,9 @@ public class UserStatistics {
 
     public void setMaxScore(double maxScore) {
         this.maxScore = maxScore;
+    }
+
+    public Map<OppositionTopic, Double> getStats() {
+        return stats;
     }
 }

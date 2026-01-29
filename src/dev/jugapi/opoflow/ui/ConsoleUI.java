@@ -28,14 +28,14 @@ public class ConsoleUI {
     }
 
     public void start() {
-        System.out.println("--- OPOFLOW ---\n");
+        System.out.println(ConsoleUIColor.BLUE + "\t--- OPOFLOW ---\n" + ConsoleUIColor.RESET);
         User user = identifyUser();
         System.out.println("Bienvenido " + user.getName() + "! (id: " + user.getId() + ")");
 
         boolean exit = false;
         while (!exit) {
 
-            System.out.println("\n--- MENÚ PRINCIPAL ---");
+            System.out.println(ConsoleUIColor.GREEN +  "\n\t--- MENÚ PRINCIPAL ---" + ConsoleUIColor.RESET);
             System.out.println(ConsoleUIColor.BLUE + "Escoge una de las siguientes opciones: " + ConsoleUIColor.RESET);
             System.out.println("1. Nuevo test");
             System.out.println("2. Ver tus estadísticas");
@@ -184,11 +184,17 @@ public class ConsoleUI {
             return;
         }
 
-        System.out.printf("\t--- ESTADÍSTICAS DE %s ---%n", user.getName().toUpperCase());
-        System.out.printf("Total de exámenes: %d | Media global: %.2f | Récord: %.2f %n",
+        System.out.printf("%n\t--- ESTADÍSTICAS DE %s ---%n", user.getName().toUpperCase());
+        System.out.printf("Total de exámenes: %d | Media global: %.2f | Récord: %.2f %n%n",
                 stats.getTotalExams(), stats.getAverageScore(), stats.getMaxScore());
-        System.out.println("-----------------------------------");
 
+        System.out.println("Rendimiento por tema: ");
+        stats.getStats().forEach((topic, avg) -> {
+            System.out.printf("- %s: %.2f%n", topic.getDescription(), avg);
+        });
+
+        System.out.println("-----------------------------------");
+        System.out.println("HISTORIAL (últimos 10:");
         List<ExamResult> history = examResultService.findByUser(user, MAX_HISTORY_ITEMS);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         for (ExamResult e : history) {

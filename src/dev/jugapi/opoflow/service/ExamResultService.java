@@ -1,13 +1,15 @@
 package dev.jugapi.opoflow.service;
 
 import dev.jugapi.opoflow.model.exam.ExamResult;
+import dev.jugapi.opoflow.model.exam.OppositionTopic;
 import dev.jugapi.opoflow.model.stats.UserStatistics;
 import dev.jugapi.opoflow.model.user.User;
 import dev.jugapi.opoflow.repository.ExamResultRepository;
 
-import java.util.Comparator;
-import java.util.DoubleSummaryStatistics;
-import java.util.List;
+import java.util.*;
+
+import static java.util.stream.Collectors.averagingDouble;
+import static java.util.stream.Collectors.groupingBy;
 
 public class ExamResultService {
 
@@ -39,7 +41,7 @@ public class ExamResultService {
     public UserStatistics getUserStats(User user){
         List<ExamResult> stats = repository.findByUser(user);
         if(stats.isEmpty()){
-            return new UserStatistics(0, 0, 0);
+            return new UserStatistics(0, 0, 0, Collections.emptyMap());
         }
 
         int totalExams = stats.size();
@@ -49,6 +51,9 @@ public class ExamResultService {
         double averageScore = summaryStatistics.getAverage();
         double maxScore = summaryStatistics.getMax();
 
-        return new UserStatistics(totalExams, averageScore, maxScore);
+        Map<OppositionTopic, Double> statsByTopic = stats.stream()
+                .collect(groupingBy(ExamResult::getTopic, averagingDouble(ExamResult::getScore)));
+
+        return new UserStatistics(totalExams, averageScore, maxScore, statsByTopic);
     }
 }
