@@ -10,15 +10,16 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 public class FileExamResultRepository implements ExamResultRepository {
 
     private final String resultsFilename;
-    private static final int INDEX_RESULT_DATE = 1;
+    private static final int INDEX_RESULT_ID = 1;
+    private static final int INDEX_RESULT_DATE = 2;
     private static final int INDEX_RESULT_TOPIC = 3;
     private static final int INDEX_RESULT_CORRECT = 4;
     private static final int INDEX_RESULT_INCORRECT = 5;
@@ -34,8 +35,8 @@ public class FileExamResultRepository implements ExamResultRepository {
         try {
             String line = String.format("%s;%s;%s;%s;%d;%d;%d;%.2f" + System.lineSeparator(),
                     result.getUser().getId(),
+                    result.getId(),
                     result.getDate(),
-                    result.getUser().getName(),
                     result.getTopic().name(),
                     result.getCorrect(),
                     result.getIncorrect(),
@@ -65,13 +66,14 @@ public class FileExamResultRepository implements ExamResultRepository {
                     .map(line -> {
                         try {
                             String[] divided = line.split(";");
+                            UUID id = UUID.fromString(divided[INDEX_RESULT_ID]);
+                            LocalDateTime date = LocalDateTime.parse(divided[INDEX_RESULT_DATE]);
                             OppositionTopic topic = OppositionTopic.valueOf(divided[INDEX_RESULT_TOPIC]);
                             int correct = Integer.parseInt(divided[INDEX_RESULT_CORRECT]);
                             int incorrect = Integer.parseInt(divided[INDEX_RESULT_INCORRECT]);
                             int unanswered = Integer.parseInt(divided[INDEX_RESULT_UNANSWERED]);
                             double score = Double.parseDouble(divided[INDEX_RESULT_SCORE]);
-                            LocalDateTime date = LocalDateTime.parse(divided[INDEX_RESULT_DATE]);
-                            return new ExamResult(user, date, topic, correct, incorrect, unanswered, score);
+                            return new ExamResult(user, id, date, topic, correct, incorrect, unanswered, score);
                         } catch (
                                 Exception e) {
                             return null;

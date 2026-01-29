@@ -3,9 +3,11 @@ package dev.jugapi.opoflow.model.exam;
 import dev.jugapi.opoflow.model.user.User;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class ExamResult {
 
+    private UUID id;
     private User user;
     private LocalDateTime date;
     private OppositionTopic topic;
@@ -15,6 +17,7 @@ public class ExamResult {
     private double score;
 
     public ExamResult(User user, LocalDateTime date, OppositionTopic topic, int correct, int incorrect, int unanswered, double score) {
+        this.id = UUID.randomUUID();
         this.user = user;
         this.date = date;
         this.topic = topic;
@@ -22,6 +25,33 @@ public class ExamResult {
         this.incorrect = incorrect;
         this.unanswered = unanswered;
         this.score = score;
+    }
+
+    public ExamResult(User user, UUID id, LocalDateTime date, OppositionTopic topic, int correct, int incorrect, int unanswered, double score) {
+        this.user = user;
+        this.id = id;
+        this.date = date;
+        this.topic = topic;
+        this.correct = correct;
+        this.incorrect = incorrect;
+        this.unanswered = unanswered;
+        this.score = score;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public OppositionTopic getTopic() {
@@ -46,9 +76,5 @@ public class ExamResult {
 
     public LocalDateTime getDate() {
         return date;
-    }
-
-    public User getUser() {
-        return user;
     }
 }
