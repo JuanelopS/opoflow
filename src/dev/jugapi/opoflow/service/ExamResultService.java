@@ -5,6 +5,7 @@ import dev.jugapi.opoflow.model.stats.UserStatistics;
 import dev.jugapi.opoflow.model.user.User;
 import dev.jugapi.opoflow.repository.ExamResultRepository;
 
+import java.util.Comparator;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
 
@@ -21,7 +22,18 @@ public class ExamResultService {
     }
 
     public List<ExamResult> findByUser(User user){
-        return repository.findByUser(user);
+        return repository.findByUser(user)
+                .stream()
+                .sorted(Comparator.comparing(ExamResult::getDate).reversed())
+                .toList();
+    }
+
+    public List<ExamResult> findByUser(User user, int limit){
+        return repository.findByUser(user)
+                .stream()
+                .sorted(Comparator.comparing(ExamResult::getDate).reversed())
+                .limit(limit)
+                .toList();
     }
 
     public UserStatistics getUserStats(User user){

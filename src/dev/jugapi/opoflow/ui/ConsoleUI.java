@@ -18,6 +18,7 @@ public class ConsoleUI {
     private final ExamResultService examResultService;
     private final UserService userService;
     private final Scanner kb;
+    private static final int MAX_HISTORY_ITEMS = 10;
 
     public ConsoleUI(QuestionService questionService, ExamResultService examResultService, UserService userService) {
         this.questionService = questionService;
@@ -188,7 +189,7 @@ public class ConsoleUI {
                 stats.getTotalExams(), stats.getAverageScore(), stats.getMaxScore());
         System.out.println("-----------------------------------");
 
-        List<ExamResult> history = examResultService.findByUser(user);
+        List<ExamResult> history = examResultService.findByUser(user, MAX_HISTORY_ITEMS);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         for (ExamResult e : history) {
             String result = String.format("%s - %s(%s): %s",

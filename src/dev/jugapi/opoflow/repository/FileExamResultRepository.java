@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -59,7 +60,7 @@ public class FileExamResultRepository implements ExamResultRepository {
         }
 
         try (Stream<String> lines = Files.lines(Path.of(resultsFilename))) {
-            Stream<ExamResult> result = lines
+            return lines
                     .filter(line -> line.startsWith(user.getId().toString()))
                     .map(line -> {
                         try {
@@ -76,8 +77,8 @@ public class FileExamResultRepository implements ExamResultRepository {
                             return null;
                         }
                     })
-                    .filter(Objects::nonNull);
-            return result.toList();
+                    .filter(Objects::nonNull)
+                    .toList();
 
         } catch (
                 IOException e) {
