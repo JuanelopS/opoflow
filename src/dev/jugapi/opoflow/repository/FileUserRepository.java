@@ -50,4 +50,27 @@ public class FileUserRepository implements UserRepository {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public User findById(UUID id) {
+        Path path = Path.of(usersFilename);
+        if (!Files.exists(path)) {
+            return null;
+        }
+        try (Stream<String> lines = Files.lines(path)) {
+            return lines
+                    .map(line -> {
+                        String[] parts = line.split(";");
+                        return new User(UUID.fromString(parts[INDEX_USER_UUID]), parts[INDEX_USER_NAME]);
+                    })
+                    .filter(user -> user.getId().toString().equalsIgnoreCase(id.toString()))
+                    .findFirst()
+                    .orElse(null);
+        } catch (
+                IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }
