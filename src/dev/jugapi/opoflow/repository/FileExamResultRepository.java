@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 public class FileExamResultRepository implements ExamResultRepository {
 
     private final String resultsFilename;
+    private static final int INDEX_RESULT_USER = 0;
     private static final int INDEX_RESULT_ID = 1;
     private static final int INDEX_RESULT_DATE = 2;
     private static final int INDEX_RESULT_TOPIC = 3;
@@ -55,40 +56,6 @@ public class FileExamResultRepository implements ExamResultRepository {
     }
 
     @Override
-    public List<ExamResult> findByUser(User user) {
-        if (!new File(resultsFilename).exists()) {
-            return new ArrayList<>();
-        }
-
-        try (Stream<String> lines = Files.lines(Path.of(resultsFilename))) {
-            return lines
-                    .filter(line -> line.startsWith(user.getId().toString()))
-                    .map(line -> {
-                        try {
-                            String[] divided = line.split(";");
-                            UUID id = UUID.fromString(divided[INDEX_RESULT_ID]);
-                            LocalDateTime date = LocalDateTime.parse(divided[INDEX_RESULT_DATE]);
-                            OppositionTopic topic = OppositionTopic.valueOf(divided[INDEX_RESULT_TOPIC]);
-                            int correct = Integer.parseInt(divided[INDEX_RESULT_CORRECT]);
-                            int incorrect = Integer.parseInt(divided[INDEX_RESULT_INCORRECT]);
-                            int unanswered = Integer.parseInt(divided[INDEX_RESULT_UNANSWERED]);
-                            double score = Double.parseDouble(divided[INDEX_RESULT_SCORE]);
-                            return new ExamResult(user, id, date, topic, correct, incorrect, unanswered, score);
-                        } catch (
-                                Exception e) {
-                            return null;
-                        }
-                    })
-                    .filter(Objects::nonNull)
-                    .toList();
-
-        } catch (
-                IOException e) {
-            return new ArrayList<>();
-        }
-    }
-
-    @Override
     public void delete(UUID id) {
         Path path = Path.of(resultsFilename);
         List<String> different = new ArrayList<>();
@@ -110,4 +77,73 @@ public class FileExamResultRepository implements ExamResultRepository {
         }
 
     }
+
+    @Override
+    public List<ExamResult> findByUser(User user) {
+        if (!new File(resultsFilename).exists()) {
+            return new ArrayList<>();
+        }
+
+        try (Stream<String> lines = Files.lines(Path.of(resultsFilename))) {
+            return lines
+                    .filter(line -> line.startsWith(user.getId().toString()))
+                    .map(line -> {
+                        try {
+                            String[] divided = line.split(";");
+                            UUID examId = UUID.fromString(divided[INDEX_RESULT_ID]);
+                            LocalDateTime date = LocalDateTime.parse(divided[INDEX_RESULT_DATE]);
+                            OppositionTopic topic = OppositionTopic.valueOf(divided[INDEX_RESULT_TOPIC]);
+                            int correct = Integer.parseInt(divided[INDEX_RESULT_CORRECT]);
+                            int incorrect = Integer.parseInt(divided[INDEX_RESULT_INCORRECT]);
+                            int unanswered = Integer.parseInt(divided[INDEX_RESULT_UNANSWERED]);
+                            double score = Double.parseDouble(divided[INDEX_RESULT_SCORE]);
+                            return new ExamResult(user, examId, date, topic, correct, incorrect, unanswered, score);
+                        } catch (
+                                Exception e) {
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .toList();
+
+        } catch (
+                IOException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public List<ExamResult> findAll() {
+        if (!new File(resultsFilename).exists()) {
+            return new ArrayList<>();
+        }
+        try (Stream<String> lines = Files.lines(Path.of(resultsFilename))) {
+            return lines
+                    .map(line -> {
+                        try {
+                            String[] divided = line.split(";");
+                            User user = new User(UUID.fromString(divided[INDEX_RESULT_USER]));
+                            UUID examId = UUID.fromString(divided[INDEX_RESULT_ID]);
+                            LocalDateTime date = LocalDateTime.parse(divided[INDEX_RESULT_DATE]);
+                            OppositionTopic topic = OppositionTopic.valueOf(divided[INDEX_RESULT_TOPIC]);
+                            int correct = Integer.parseInt(divided[INDEX_RESULT_CORRECT]);
+                            int incorrect = Integer.parseInt(divided[INDEX_RESULT_INCORRECT]);
+                            int unanswered = Integer.parseInt(divided[INDEX_RESULT_UNANSWERED]);
+                            double score = Double.parseDouble(divided[INDEX_RESULT_SCORE]);
+                            return new ExamResult(user, examId, date, topic, correct, incorrect, unanswered, score);
+                        } catch (
+                                Exception e) {
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .toList();
+
+        } catch (
+                IOException e) {
+            return new ArrayList<>();
+        }
+    }
+
+
 }

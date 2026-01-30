@@ -30,6 +30,7 @@ public class FileUserRepository implements UserRepository {
         }
     }
 
+    // TODO: Optional here
     @Override
     public User findByName(String name) {
         Path path = Path.of(usersFilename);
@@ -51,6 +52,7 @@ public class FileUserRepository implements UserRepository {
         }
     }
 
+    // TODO: Optional here
     @Override
     public User findById(UUID id) {
         Path path = Path.of(usersFilename);

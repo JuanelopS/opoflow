@@ -4,7 +4,11 @@ import java.util.UUID;
 
 public class User {
     private final UUID id;
-    private final String name;
+    private String name;
+
+    public User(UUID id) {
+        this.id = id;
+    }
 
     public User(String name) {
         this.id = UUID.randomUUID();

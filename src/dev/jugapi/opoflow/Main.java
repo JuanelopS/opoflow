@@ -12,8 +12,8 @@ public class Main {
         ExamResultRepository examResultRepository = new FileExamResultRepository("results.txt");
         UserRepository userRepository = new FileUserRepository();
         QuestionService questionService = new QuestionService(questionRepository);
-        ExamResultService examResultService = new ExamResultService(examResultRepository);
         UserService userService = new UserService(userRepository);
+        ExamResultService examResultService = new ExamResultService(examResultRepository, userService);
         ConsoleUI ui = new ConsoleUI(questionService, examResultService, userService);
         ui.start();
     }
