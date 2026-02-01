@@ -1,15 +1,14 @@
 package dev.jugapi.opoflow.ui;
 
 import dev.jugapi.opoflow.model.exam.*;
+import dev.jugapi.opoflow.model.stats.RankingEntry;
 import dev.jugapi.opoflow.model.stats.UserStatistics;
 import dev.jugapi.opoflow.model.user.User;
 import dev.jugapi.opoflow.service.*;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class ConsoleUI {
 
@@ -40,7 +39,8 @@ public class ConsoleUI {
             System.out.println("1. Nuevo test");
             System.out.println("2. Ver tus estadísticas");
             System.out.println("3. Gestionar historial (borrar)");
-            System.out.println("4. Salir");
+            System.out.println("4. Ranking por oposición");
+            System.out.println("5. Salir");
             System.out.print("Selecciona una opción: ");
             String option = kb.nextLine();
 
@@ -52,6 +52,8 @@ public class ConsoleUI {
                 case "3" ->
                         manageHistory(user);
                 case "4" ->
+                        showRankingMenu();
+                case "5" ->
                         exit = true;
                 default ->
                         System.out.println(ConsoleUIColor.RED + "Opción incorrecta!" + ConsoleUIColor.RESET);
@@ -219,9 +221,9 @@ public class ConsoleUI {
         return history;
     }
 
-    public void manageHistory(User user) {
+    private void manageHistory(User user) {
         System.out.println();
-        List<ExamResult> history = Collections.emptyList();
+        List<ExamResult> history;
         int selected;
         boolean isValid = false;
         do
@@ -258,7 +260,7 @@ public class ConsoleUI {
                             validConfirmation = true;
                             System.out.println();
                         } else
-                            System.out.println("Opción no válida!");
+                            System.out.print("Opción no válida! (Y/N): ");
                     } while (!validConfirmation);
                 } else {
                     isValid = true;
@@ -268,5 +270,54 @@ public class ConsoleUI {
                 System.out.println(ConsoleUIColor.RED + "Opción no válida!" + ConsoleUIColor.RESET);
             }
         } while (!isValid);
+    }
+
+    private void showRankingMenu() {
+        List<OppositionTopic> topics = Arrays
+                .stream(OppositionTopic.values())
+                .filter(OppositionTopic::isGeneral)
+                .toList();
+
+        System.out.println("--- RANKINGS DISPONIBLES ---");
+        for (int i = 0; i < topics.size(); i++) {
+            String line = String.format("%d. %s: %s", i + 1, topics.get(i).name(), topics.get(i).getDescription());
+            System.out.println(line);
+        }
+        boolean isValid = false;
+        do
+        {
+            System.out.print("Opción (introduzca 0 para salir): ");
+            try {
+                int option = Integer.parseInt(kb.nextLine());
+                if (option == 0) {
+                    isValid = true;
+                    continue;
+                }
+                if (option > 0 && option <= topics.size()) {
+                    OppositionTopic selected = topics.get(option - 1);
+                    List<RankingEntry> ranking = examResultService.getRankingByTopic(selected);
+                    printRanking(ranking, selected);
+                    isValid = true;
+                } else {
+                    throw new NumberFormatException();
+                }
+            } catch (
+                    NumberFormatException e) {
+                System.out.println(ConsoleUIColor.RED + "Opción no valida." + ConsoleUIColor.RESET);
+            }
+        } while (!isValid);
+    }
+
+    private void printRanking(List<RankingEntry> ranking, OppositionTopic topic) {
+        if (ranking.isEmpty()) {
+            System.out.println("Todavía no hay datos para esta oposición... ¡Sé el primero!");
+            return;
+        }
+
+        System.out.println(ConsoleUIColor.BLUE + "\n--- RANKING DE " + topic.name() + " ---" + ConsoleUIColor.RESET);
+        ranking.forEach(r -> {
+            String line = String.format("%-16s |  %.2f", r.username(), r.averageScore());
+            System.out.println(line);
+        });
     }
 }

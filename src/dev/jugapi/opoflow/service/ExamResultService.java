@@ -49,7 +49,7 @@ public class ExamResultService {
 
         Map<UUID, Double> userAverages = allStats
                 .stream()
-                .filter(res -> res.getTopic().getOpposition() == topic.getOpposition())
+                .filter(res -> res.getTopic().equals(topic))
                 .collect(groupingBy(
                         res -> res.getUser().getId(),
                         averagingDouble(ExamResult::getScore)
@@ -68,7 +68,6 @@ public class ExamResultService {
                 .sorted(Comparator.comparing(RankingEntry::averageScore).reversed())
                 .toList();
     }
-
 
     public UserStatistics getUserStats(User user) {
         List<ExamResult> stats = repository.findByUser(user);

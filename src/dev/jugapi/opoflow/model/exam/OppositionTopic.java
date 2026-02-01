@@ -25,6 +25,10 @@ public enum OppositionTopic {
         return description;
     }
 
+    public boolean isGeneral() {
+        return isGeneral;
+    }
+
     /* this method allow to filter in service the questions by block or select all */
     public boolean includes(OppositionTopic other) {
         if(other == null){
