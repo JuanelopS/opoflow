@@ -4,11 +4,15 @@ import dev.jugapi.opoflow.model.exam.*;
 import dev.jugapi.opoflow.model.stats.RankingEntry;
 import dev.jugapi.opoflow.model.stats.UserStatistics;
 import dev.jugapi.opoflow.model.user.User;
-import dev.jugapi.opoflow.service.*;
+import dev.jugapi.opoflow.service.ExamResultService;
+import dev.jugapi.opoflow.service.QuestionService;
+import dev.jugapi.opoflow.service.UserService;
 
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 public class ConsoleUI {
 

@@ -1,8 +1,23 @@
+.env
+target/
+*.class
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
 ### IntelliJ IDEA ###
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 .kotlin
+/.idea/
+*.iml
+*.iws
+gen/
+.idea
+
 
 ### Eclipse ###
 .apt_generated
@@ -25,11 +40,15 @@ bin/
 
 ### VS Code ###
 .vscode/
+.history/
+*.code-workspace
 
 ### Mac OS ###
 .DS_Store
 
+### Mock ###
 questions*
 results.txt
 users.txt
+
 /Agent

@@ -1,8 +1,12 @@
 package dev.jugapi.opoflow.service;
 
-import dev.jugapi.opoflow.model.exam.*;
+import dev.jugapi.opoflow.model.exam.Exam;
+import dev.jugapi.opoflow.model.exam.OppositionTopic;
+import dev.jugapi.opoflow.model.exam.Option;
+import dev.jugapi.opoflow.model.exam.Question;
 import dev.jugapi.opoflow.model.user.User;
 import dev.jugapi.opoflow.repository.QuestionRepository;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
