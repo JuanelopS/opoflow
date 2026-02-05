@@ -5,7 +5,8 @@ public enum OppositionTopic {
     TAI_BLOCK1(Opposition.TAI_AGE_PART1, "Test de preguntas del bloque 1 de TAI_AGE", false),
     TAI_BLOCK2(Opposition.TAI_AGE_PART1, "Test de preguntas del bloque 2 de TAI_AGE", false),
     TAI_BLOCK3(Opposition.TAI_AGE_PART1, "Test de preguntas del bloque 3 de TAI_AGE", false),
-    TAI_BLOCK4(Opposition.TAI_AGE_PART1, "Test de preguntas del bloque 4 de TAI_AGE", false);
+    TAI_BLOCK4(Opposition.TAI_AGE_PART1, "Test de preguntas del bloque 4 de TAI_AGE", false),
+    ADVO_ALL(Opposition.ADVO_AGE, "Test de preguntas de todos los bloque de ADVO_AGE", true);
 
     private final Opposition opposition;
     private final String description;

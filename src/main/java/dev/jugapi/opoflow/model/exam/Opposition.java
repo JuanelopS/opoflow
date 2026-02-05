@@ -1,7 +1,8 @@
 package dev.jugapi.opoflow.model.exam;
 
 public enum Opposition {
-    TAI_AGE_PART1(1, (double) 1/3);
+    TAI_AGE_PART1(1, (double) 1/3),
+    ADVO_AGE(1, (double) 1/3);
 
     private final double correct;
     private final double incorrect;
