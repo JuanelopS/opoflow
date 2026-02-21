@@ -34,7 +34,7 @@ class ExamResultServiceTest {
     private ExamResultService examService;
 
     @Test
-    @DisplayName("Should call repository save when service save is called")
+    @DisplayName("Should call repository save method when service save is called")
     void testSave() {
         ExamResult result = new ExamResult(new User(UUID.randomUUID()), LocalDateTime.now(),
                 OppositionTopic.TAI_ALL, 10, 0, 0, 10.0);
