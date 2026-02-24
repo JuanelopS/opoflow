@@ -1,22 +1,20 @@
 package dev.jugapi.opoflow;
 
-import dev.jugapi.opoflow.repository.*;
-import dev.jugapi.opoflow.service.ExamResultService;
-import dev.jugapi.opoflow.service.QuestionService;
-import dev.jugapi.opoflow.service.UserService;
+import dev.jugapi.opoflow.config.AppConfig;
+import dev.jugapi.opoflow.exception.AppConfigurationException;
 import dev.jugapi.opoflow.ui.ConsoleUI;
-
 
 public class Main {
     public static void main(String[] args) {
 
-        QuestionRepository questionRepository = new FileQuestionRepository("questions3.txt");
-        ExamResultRepository examResultRepository = new FileExamResultRepository("results.txt");
-        UserRepository userRepository = new FileUserRepository();
-        QuestionService questionService = new QuestionService(questionRepository);
-        UserService userService = new UserService(userRepository);
-        ExamResultService examResultService = new ExamResultService(examResultRepository, userService);
-        ConsoleUI ui = new ConsoleUI(questionService, examResultService, userService);
-        ui.start();
+        try {
+            AppConfig config = new AppConfig();
+            ConsoleUI ui = config.setup();
+            ui.start();
+        } catch (
+                AppConfigurationException e) {
+            System.err.println(e.getMessage());
+        }
+
     }
 }

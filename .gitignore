@@ -50,5 +50,6 @@ bin/
 questions*
 results.txt
 users.txt
+config.properties
 
 /Agent
