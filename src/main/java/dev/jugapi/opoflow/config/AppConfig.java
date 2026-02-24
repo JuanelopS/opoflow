@@ -30,10 +30,11 @@ public class AppConfig {
 
         String questions = props.getProperty("repo.questions.path");
         String results = props.getProperty("repo.results.path");
+        String users = props.getProperty("repo.users.path");
 
         QuestionRepository questionRepository = new FileQuestionRepository(questions);
         ExamResultRepository examResultRepository = new FileExamResultRepository(results);
-        UserRepository userRepository = new FileUserRepository();
+        UserRepository userRepository = new FileUserRepository(users);
         QuestionService questionService = new QuestionService(questionRepository);
         UserService userService = new UserService(userRepository);
         ExamResultService examResultService = new ExamResultService(examResultRepository, userService);

@@ -11,9 +11,13 @@ import java.util.stream.Stream;
 
 public class FileUserRepository implements UserRepository {
 
-    private final String usersFilename = "users.txt";
+    private final String usersFilename;
     private static final int INDEX_USER_UUID = 0;
     private static final int INDEX_USER_NAME = 1;
+
+    public FileUserRepository(String usersFilename) {
+        this.usersFilename = usersFilename;
+    }
 
     @Override
     public void save(User user) {
